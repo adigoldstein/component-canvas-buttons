@@ -101,7 +101,7 @@ const HamburgerMenuShowcase: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div className="text-lg font-semibold">My App</div>
                   <HamburgerMenu
-                    side="left"
+                    side="right"
                     onHome={handleHome}
                     onDocuments={handleDocuments}
                     onNotifications={handleNotifications}
