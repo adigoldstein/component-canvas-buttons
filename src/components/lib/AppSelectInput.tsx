@@ -79,7 +79,7 @@ export const AppSelectInput: React.FC<AppSelectInputProps> = ({
             <SelectItem 
               key={option.value} 
               value={option.value}
-              className="hover:bg-gray-100 cursor-pointer px-3 py-2"
+              className="hover:bg-red-500 hover:text-white cursor-pointer px-3 py-2"
             >
               {option.label}
             </SelectItem>
