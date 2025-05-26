@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
@@ -37,7 +36,7 @@ export default function Index() {
     },
     {
       title: 'Hamburger Menu',
-      description: 'Navigation dropdown menu triggered by a hamburger icon, perfect for mobile and compact layouts.',
+      description: 'Sliding drawer menu triggered by a hamburger icon, perfect for mobile navigation and responsive layouts.',
       route: '/hamburger-menu',
       color: 'bg-cyan-500 hover:bg-cyan-600'
     }

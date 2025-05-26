@@ -2,17 +2,18 @@
 import React from 'react';
 import { Menu, Home, FileText, Bell, Settings, LogOut } from 'lucide-react';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 interface HamburgerMenuProps {
   className?: string;
+  side?: 'left' | 'right';
   onHome?: () => void;
   onDocuments?: () => void;
   onNotifications?: () => void;
@@ -22,6 +23,7 @@ interface HamburgerMenuProps {
 
 export const HamburgerMenu: React.FC<HamburgerMenuProps> = ({
   className,
+  side = 'left',
   onHome,
   onDocuments,
   onNotifications,
@@ -53,9 +55,42 @@ export const HamburgerMenu: React.FC<HamburgerMenuProps> = ({
     console.log('Logout clicked');
   };
 
+  const menuItems = [
+    {
+      label: 'Home',
+      icon: Home,
+      onClick: handleHome,
+      className: 'text-gray-700 hover:text-gray-900 hover:bg-gray-50',
+    },
+    {
+      label: 'My Documents',
+      icon: FileText,
+      onClick: handleDocuments,
+      className: 'text-gray-700 hover:text-gray-900 hover:bg-gray-50',
+    },
+    {
+      label: 'Notifications',
+      icon: Bell,
+      onClick: handleNotifications,
+      className: 'text-gray-700 hover:text-gray-900 hover:bg-gray-50',
+    },
+    {
+      label: 'Settings',
+      icon: Settings,
+      onClick: handleSettings,
+      className: 'text-gray-700 hover:text-gray-900 hover:bg-gray-50',
+    },
+    {
+      label: 'Logout',
+      icon: LogOut,
+      onClick: handleLogout,
+      className: 'text-red-600 hover:text-red-700 hover:bg-red-50',
+    },
+  ];
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+    <Sheet>
+      <SheetTrigger asChild>
         <Button
           variant="ghost"
           size="icon"
@@ -68,60 +103,41 @@ export const HamburgerMenu: React.FC<HamburgerMenuProps> = ({
             className
           )}
           aria-label="Main menu"
-          aria-haspopup="true"
         >
           <Menu className="h-5 w-5" />
         </Button>
-      </DropdownMenuTrigger>
+      </SheetTrigger>
       
-      <DropdownMenuContent
-        align="end"
-        className="w-56 bg-white border border-gray-200 shadow-lg rounded-md"
-        sideOffset={8}
+      <SheetContent 
+        side={side} 
+        className="w-[80vw] sm:w-[350px] p-0"
+        role="navigation"
+        aria-modal="true"
       >
-        <DropdownMenuItem
-          onClick={handleHome}
-          className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer"
-        >
-          <Home className="h-4 w-4" />
-          <span>Home</span>
-        </DropdownMenuItem>
+        <SheetHeader className="px-6 py-4 border-b border-gray-200">
+          <SheetTitle className="text-left text-lg font-semibold text-gray-900">
+            Menu
+          </SheetTitle>
+        </SheetHeader>
         
-        <DropdownMenuItem
-          onClick={handleDocuments}
-          className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer"
-        >
-          <FileText className="h-4 w-4" />
-          <span>My Documents</span>
-        </DropdownMenuItem>
-        
-        <DropdownMenuItem
-          onClick={handleNotifications}
-          className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer"
-        >
-          <Bell className="h-4 w-4" />
-          <span>Notifications</span>
-        </DropdownMenuItem>
-        
-        <DropdownMenuItem
-          onClick={handleSettings}
-          className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 cursor-pointer"
-        >
-          <Settings className="h-4 w-4" />
-          <span>Settings</span>
-        </DropdownMenuItem>
-        
-        <DropdownMenuSeparator />
-        
-        <DropdownMenuItem
-          onClick={handleLogout}
-          className="flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 cursor-pointer"
-        >
-          <LogOut className="h-4 w-4" />
-          <span>Logout</span>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+        <div className="flex flex-col py-4">
+          {menuItems.map((item, index) => (
+            <button
+              key={item.label}
+              onClick={item.onClick}
+              className={cn(
+                'flex items-center gap-3 px-6 py-3 text-sm font-medium transition-colors duration-200 w-full text-left',
+                item.className,
+                index === menuItems.length - 1 && 'border-t border-gray-200 mt-2 pt-5'
+              )}
+            >
+              <item.icon className="h-5 w-5" />
+              <span>{item.label}</span>
+            </button>
+          ))}
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 };
 

@@ -44,21 +44,42 @@ const HamburgerMenuShowcase: React.FC = () => {
               Hamburger Menu Component
             </h1>
             <p className="text-xl text-gray-600">
-              A dropdown menu component triggered by a hamburger icon
+              A sliding drawer menu component triggered by a hamburger icon
             </p>
           </div>
 
           <div className="space-y-8">
-            {/* Basic Example */}
+            {/* Basic Example - Left Drawer */}
             <div className="bg-white rounded-lg shadow-sm border p-6">
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">
-                Basic Hamburger Menu
+                Left Sliding Drawer
               </h2>
               <p className="text-gray-600 mb-6">
-                Click the hamburger icon (three lines) to open the dropdown menu with navigation options.
+                Click the hamburger icon to open a sliding drawer from the left side of the screen.
               </p>
               <div className="flex justify-center">
                 <HamburgerMenu
+                  side="left"
+                  onHome={handleHome}
+                  onDocuments={handleDocuments}
+                  onNotifications={handleNotifications}
+                  onSettings={handleSettings}
+                  onLogout={handleLogout}
+                />
+              </div>
+            </div>
+
+            {/* Right Drawer Example */}
+            <div className="bg-white rounded-lg shadow-sm border p-6">
+              <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+                Right Sliding Drawer
+              </h2>
+              <p className="text-gray-600 mb-6">
+                Example of the hamburger menu opening from the right side.
+              </p>
+              <div className="flex justify-center">
+                <HamburgerMenu
+                  side="right"
                   onHome={handleHome}
                   onDocuments={handleDocuments}
                   onNotifications={handleNotifications}
@@ -80,6 +101,7 @@ const HamburgerMenuShowcase: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div className="text-lg font-semibold">My App</div>
                   <HamburgerMenu
+                    side="left"
                     onHome={handleHome}
                     onDocuments={handleDocuments}
                     onNotifications={handleNotifications}
@@ -99,11 +121,27 @@ const HamburgerMenuShowcase: React.FC = () => {
               <ul className="space-y-2 text-gray-600">
                 <li className="flex items-center gap-2">
                   <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                  Sliding drawer from left or right side
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                  Responsive design (80% width on mobile, 350px on desktop)
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                  Semi-transparent backdrop overlay
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                  Smooth slide-in/out animations
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="w-2 h-2 bg-green-500 rounded-full"></span>
                   Accessible with proper ARIA attributes
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                  Keyboard navigation support (Enter/Space to toggle, Escape to close)
+                  Keyboard navigation support (Escape to close)
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="w-2 h-2 bg-green-500 rounded-full"></span>
@@ -111,15 +149,7 @@ const HamburgerMenuShowcase: React.FC = () => {
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                  Customizable styling and callbacks
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                  Standard hamburger icon (three horizontal lines)
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                  Built with shadcn/ui components
+                  Built with shadcn/ui Sheet component
                 </li>
               </ul>
             </div>
