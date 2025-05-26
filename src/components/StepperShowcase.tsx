@@ -1,10 +1,9 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Stepper } from './lib/Stepper';
 import { StepData, Member } from './lib/Stepper/types';
 import BackButton from './lib/BackButton';
-import { User, FileText, Upload } from 'lucide-react';
+import { User, FileText, Upload, Settings, Home, Check } from 'lucide-react';
 
 const StepperShowcase: React.FC = () => {
   const navigate = useNavigate();
@@ -22,9 +21,10 @@ const StepperShowcase: React.FC = () => {
         { id: 'child2', name: 'Child 2', selected: false },
       ],
       subSteps: [
-        { id: 'sub-1-1', title: 'Select Member', completed: false },
-        { id: 'sub-1-2', title: 'Choose Claim Type', completed: false },
-        { id: 'sub-1-3', title: 'Verify Information', completed: false },
+        { id: 'sub-1-1', title: 'Select Member', icon: <User className="w-4 h-4" />, completed: false },
+        { id: 'sub-1-2', title: 'Choose Claim Type', icon: <FileText className="w-4 h-4" />, completed: false },
+        { id: 'sub-1-3', title: 'Verify Information', icon: <Check className="w-4 h-4" />, completed: false },
+        { id: 'sub-1-4', title: 'Final Review', icon: <Settings className="w-4 h-4" />, completed: false },
       ],
       required: true,
       completed: false,
@@ -33,11 +33,6 @@ const StepperShowcase: React.FC = () => {
       id: 'step-2',
       title: 'Document Upload',
       icon: <Upload className="w-4 h-4" />,
-      subSteps: [
-        { id: 'sub-2-1', title: 'Upload Medical Records', completed: false },
-        { id: 'sub-2-2', title: 'Upload Insurance Card', completed: false },
-        { id: 'sub-2-3', title: 'Upload Supporting Documents', completed: false },
-      ],
       required: true,
       completed: false,
     },
@@ -130,6 +125,17 @@ const StepperShowcase: React.FC = () => {
       const subStep = step.subSteps[subStepIndex];
       
       switch (subStep.id) {
+        case 'sub-1-1':
+          return (
+            <div>
+              <p className="text-gray-600 mb-4">Select the member for this claim:</p>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <p className="text-sm text-gray-700">
+                  Choose from the member cards above.
+                </p>
+              </div>
+            </div>
+          );
         case 'sub-1-2':
           return (
             <div>
@@ -161,14 +167,14 @@ const StepperShowcase: React.FC = () => {
               </div>
             </div>
           );
-        case 'sub-2-1':
-        case 'sub-2-2':
-        case 'sub-2-3':
+        case 'sub-1-4':
           return (
             <div>
-              <p className="text-gray-600 mb-4">Upload your {subStep.title.toLowerCase()}</p>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                <p className="text-gray-500">Drag and drop files here or click to browse</p>
+              <p className="text-gray-600 mb-4">Final review of your selections:</p>
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <p className="text-sm text-blue-700">
+                  Review all your selections before proceeding.
+                </p>
               </div>
             </div>
           );
@@ -179,6 +185,15 @@ const StepperShowcase: React.FC = () => {
 
     // Main step content without sub-steps
     switch (stepIndex) {
+      case 1:
+        return (
+          <div>
+            <p className="text-gray-600 mb-4">Upload your documents</p>
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+              <p className="text-gray-500">Drag and drop files here or click to browse</p>
+            </div>
+          </div>
+        );
       case 2:
         return (
           <div>
@@ -242,8 +257,8 @@ const steps = [
       { id: 'spouse', name: 'Spouse', selected: false },
     ],
     subSteps: [
-      { id: 'sub-1-1', title: 'Select Member', completed: false },
-      { id: 'sub-1-2', title: 'Choose Claim Type', completed: false },
+      { id: 'sub-1-1', title: 'Select Member', icon: <User className="w-4 h-4" />, completed: false },
+      { id: 'sub-1-2', title: 'Choose Claim Type', icon: <FileText className="w-4 h-4" />, completed: false },
     ],
     required: true,
   },

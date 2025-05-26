@@ -68,6 +68,11 @@ const StepCard: React.FC<StepCardProps> = ({
     return step.subSteps?.[subStepIndex]?.completed || false;
   };
 
+  const isSubStepRevealed = (subStepIndex: number) => {
+    if (subStepIndex === 0) return true;
+    return isSubStepCompleted(subStepIndex - 1);
+  };
+
   const getStepProgress = () => {
     if (!hasSubSteps) return isCompleted ? 'completed' : 'pending';
     
@@ -111,22 +116,41 @@ const StepCard: React.FC<StepCardProps> = ({
             </div>
           )}
 
-          {/* Sub Steps Section */}
+          {/* Sub Steps Section - displayed as a grid of member-like cards */}
           {hasSubSteps && (
-            <div className="space-y-3">
+            <div className="space-y-4">
               <h4 className="font-medium text-gray-700">Steps to Complete:</h4>
-              {step.subSteps!.map((subStep, subStepIndex) => (
-                <SubStepCard
-                  key={subStep.id}
-                  subStep={subStep}
-                  subStepIndex={subStepIndex}
-                  parentStepIndex={stepIndex}
-                  isActive={subStepIndex === currentSubStep}
-                  isCompleted={isSubStepCompleted(subStepIndex)}
-                  onSubStepClick={handleSubStepClick}
-                  getStepContent={getStepContent}
-                />
-              ))}
+              <div className="grid grid-cols-4 gap-4">
+                {step.subSteps!.map((subStep, subStepIndex) => (
+                  <SubStepCard
+                    key={subStep.id}
+                    subStep={subStep}
+                    subStepIndex={subStepIndex}
+                    parentStepIndex={stepIndex}
+                    isActive={subStepIndex === currentSubStep}
+                    isCompleted={isSubStepCompleted(subStepIndex)}
+                    isRevealed={isSubStepRevealed(subStepIndex)}
+                    onSubStepClick={handleSubStepClick}
+                    getStepContent={getStepContent}
+                  />
+                ))}
+              </div>
+              
+              {/* Active sub-step content */}
+              {hasSubSteps && isSubStepRevealed(currentSubStep) && (
+                <div className="mt-4">
+                  <SubStepCard
+                    subStep={step.subSteps![currentSubStep]}
+                    subStepIndex={currentSubStep}
+                    parentStepIndex={stepIndex}
+                    isActive={true}
+                    isCompleted={isSubStepCompleted(currentSubStep)}
+                    isRevealed={true}
+                    onSubStepClick={handleSubStepClick}
+                    getStepContent={getStepContent}
+                  />
+                </div>
+              )}
             </div>
           )}
 
