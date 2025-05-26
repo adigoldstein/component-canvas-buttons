@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 
@@ -37,11 +36,11 @@ export const AppTextInput: React.FC<AppTextInputProps> = ({
   const baseInputClasses = cn(
     'w-full px-3 py-2 rounded-md transition-colors duration-200',
     'border bg-white text-gray-900 placeholder-gray-500',
-    'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500',
+    'focus:outline-none focus:ring-2 focus:border-[#E10514]',
     'disabled:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-60',
     multiline ? 'min-h-[80px] resize-y' : 'h-10',
     error ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300',
-    isFocused && !error && 'border-blue-500 ring-2 ring-blue-500 ring-opacity-20'
+    isFocused && !error && 'border-[#E10514] ring-2 ring-[#E10514] ring-opacity-20'
   );
 
   const labelClasses = cn(
