@@ -52,7 +52,7 @@ const AppTextInputShowcase: React.FC = () => {
         {/* Dropdown/Select Input Examples */}
         <section className="mb-8">
           <h2 className="text-xl font-semibold mb-4 text-gray-800">Dropdown Inputs</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4" style="width:150px">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <AppSelectInput
               label="Select Country"
               placeholder="Select country"
