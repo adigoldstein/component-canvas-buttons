@@ -117,107 +117,110 @@ const Stepper: React.FC<StepperProps> = ({
         ))}
       </div>
 
-      {/* Active Step Content */}
-      <Card className={cn(
-        'border-2 transition-all duration-200',
-        {
-          'border-red-200 shadow-lg': true,
-        }
-      )}>
-        <CardHeader className="pb-4">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-8 h-8 bg-red-500 text-white rounded-full">
-              <span className="text-sm font-medium">{currentStep + 1}</span>
-            </div>
-            <h3 className="text-lg font-semibold text-red-600">
-              {steps[currentStep]?.title}
-            </h3>
-          </div>
-        </CardHeader>
-        
-        <CardContent className="pt-0">
-          {/* Step Content */}
-          <div className="mb-6">
-            {getStepContent(currentStep)}
-          </div>
-
-          {/* Navigation Buttons */}
-          <div className="flex justify-between items-center">
-            <div>
-              {!hideBackButton && currentStep > 0 && (
-                <Button
-                  variant="outline"
-                  onClick={handleBack}
-                  className="px-6"
-                >
-                  {backButtonText}
-                </Button>
-              )}
-            </div>
-            
-            <div>
-              {!hideNextButton && currentStep < steps.length - 1 && (
-                <Button
-                  onClick={handleNext}
-                  className="px-6 bg-red-500 hover:bg-red-600 text-white"
-                >
-                  {nextButtonText}
-                </Button>
-              )}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Inactive Steps (Collapsed) */}
+      {/* All Steps */}
       <div className="space-y-4">
         {steps.map((step, index) => {
-          if (index === currentStep) return null;
+          const isActive = index === currentStep;
+          const isStepDone = isCompleted(index);
           
-          return (
-            <Card
-              key={index}
-              className={cn(
-                'border transition-all duration-200 cursor-pointer hover:shadow-md',
-                {
-                  'border-green-200 bg-green-50': isCompleted(index),
-                  'border-gray-200 bg-gray-50': !isCompleted(index),
-                }
-              )}
-              onClick={() => handleStepClick(index)}
-            >
-              <CardContent className="py-4">
-                <div className="flex items-center gap-3">
-                  <div
-                    className={cn(
-                      'flex items-center justify-center w-8 h-8 rounded-full border-2',
-                      {
-                        'bg-green-500 border-green-500 text-white': isCompleted(index),
-                        'bg-gray-100 border-gray-300 text-gray-500': !isCompleted(index),
-                      }
-                    )}
-                  >
-                    {isCompleted(index) ? (
-                      <Check className="w-4 h-4" />
-                    ) : (
-                      <span className="text-sm">{index + 1}</span>
-                    )}
+          if (isActive) {
+            // Active Step Content (Expanded)
+            return (
+              <Card key={index} className={cn(
+                'border-2 transition-all duration-200 border-red-200 shadow-lg'
+              )}>
+                <CardHeader className="pb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-center w-8 h-8 bg-red-500 text-white rounded-full">
+                      <span className="text-sm font-medium">{index + 1}</span>
+                    </div>
+                    <h3 className="text-lg font-semibold text-red-600">
+                      {step.title}
+                    </h3>
                   </div>
-                  <h4
-                    className={cn(
-                      'font-medium',
-                      {
-                        'text-green-700': isCompleted(index),
-                        'text-gray-600': !isCompleted(index),
-                      }
-                    )}
-                  >
-                    {step.title}
-                  </h4>
-                </div>
-              </CardContent>
-            </Card>
-          );
+                </CardHeader>
+                
+                <CardContent className="pt-0">
+                  {/* Step Content */}
+                  <div className="mb-6">
+                    {getStepContent(index)}
+                  </div>
+
+                  {/* Navigation Buttons */}
+                  <div className="flex justify-between items-center">
+                    <div>
+                      {!hideBackButton && currentStep > 0 && (
+                        <Button
+                          variant="outline"
+                          onClick={handleBack}
+                          className="px-6"
+                        >
+                          {backButtonText}
+                        </Button>
+                      )}
+                    </div>
+                    
+                    <div>
+                      {!hideNextButton && currentStep < steps.length - 1 && (
+                        <Button
+                          onClick={handleNext}
+                          className="px-6 bg-red-500 hover:bg-red-600 text-white"
+                        >
+                          {nextButtonText}
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          } else {
+            // Inactive Steps (Collapsed)
+            return (
+              <Card
+                key={index}
+                className={cn(
+                  'border transition-all duration-200 cursor-pointer hover:shadow-md',
+                  {
+                    'border-green-200 bg-green-50': isStepDone,
+                    'border-gray-200 bg-gray-50': !isStepDone,
+                  }
+                )}
+                onClick={() => handleStepClick(index)}
+              >
+                <CardContent className="py-4">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={cn(
+                        'flex items-center justify-center w-8 h-8 rounded-full border-2',
+                        {
+                          'bg-green-500 border-green-500 text-white': isStepDone,
+                          'bg-gray-100 border-gray-300 text-gray-500': !isStepDone,
+                        }
+                      )}
+                    >
+                      {isStepDone ? (
+                        <Check className="w-4 h-4" />
+                      ) : (
+                        <span className="text-sm">{index + 1}</span>
+                      )}
+                    </div>
+                    <h4
+                      className={cn(
+                        'font-medium',
+                        {
+                          'text-green-700': isStepDone,
+                          'text-gray-600': !isStepDone,
+                        }
+                      )}
+                    >
+                      {step.title}
+                    </h4>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          }
         })}
       </div>
     </div>
