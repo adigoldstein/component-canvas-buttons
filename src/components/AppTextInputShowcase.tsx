@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { AppTextInput } from './lib/AppTextInput';
 import { AppDateInput } from './lib/AppDateInput';
+import { AppSelectInput, SelectOption } from './lib/AppSelectInput';
 
 const AppTextInputShowcase: React.FC = () => {
   const [textValue, setTextValue] = useState('');
@@ -12,13 +13,73 @@ const AppTextInputShowcase: React.FC = () => {
   const [errorValue, setErrorValue] = useState('invalid-email');
   const [serviceDate, setServiceDate] = useState<Date | undefined>();
   const [birthDate, setBirthDate] = useState<Date | undefined>();
+  const [selectedCountry, setSelectedCountry] = useState('');
+  const [selectedCity, setSelectedCity] = useState('');
+  const [selectedTreatments, setSelectedTreatments] = useState('');
+
+  const countryOptions: SelectOption[] = [
+    { value: 'us', label: 'United States' },
+    { value: 'ca', label: 'Canada' },
+    { value: 'uk', label: 'United Kingdom' },
+    { value: 'de', label: 'Germany' },
+    { value: 'fr', label: 'France' },
+    { value: 'au', label: 'Australia' },
+  ];
+
+  const cityOptions: SelectOption[] = [
+    { value: 'ny', label: 'New York' },
+    { value: 'la', label: 'Los Angeles' },
+    { value: 'chicago', label: 'Chicago' },
+    { value: 'houston', label: 'Houston' },
+    { value: 'phoenix', label: 'Phoenix' },
+  ];
+
+  const treatmentOptions: SelectOption[] = [
+    { value: '1', label: '1 Treatment' },
+    { value: '2', label: '2 Treatments' },
+    { value: '3', label: '3 Treatments' },
+    { value: '4', label: '4 Treatments' },
+    { value: '5', label: '5+ Treatments' },
+  ];
 
   return (
     <div className="p-8 space-y-8 bg-gray-50 min-h-screen">
       <div className="max-w-2xl mx-auto">
         <h1 className="text-3xl font-bold text-center mb-8 text-gray-900">
-          AppTextInput & AppDateInput Component Library
+          App Input Component Library
         </h1>
+
+        {/* Dropdown/Select Input Examples */}
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold mb-4 text-gray-800">Dropdown Inputs</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <AppSelectInput
+              label="Select Country"
+              placeholder="Select country"
+              value={selectedCountry}
+              onValueChange={setSelectedCountry}
+              options={countryOptions}
+              required
+            />
+            <AppSelectInput
+              label="Select City"
+              placeholder="Select city"
+              value={selectedCity}
+              onValueChange={setSelectedCity}
+              options={cityOptions}
+            />
+          </div>
+          <div className="mt-4">
+            <AppSelectInput
+              label="Number of Treatments"
+              placeholder="Choose Amount"
+              value={selectedTreatments}
+              onValueChange={setSelectedTreatments}
+              options={treatmentOptions}
+              required
+            />
+          </div>
+        </section>
 
         {/* Date Input Examples */}
         <section className="mb-8">
@@ -128,7 +189,17 @@ const AppTextInputShowcase: React.FC = () => {
         <section className="mb-8">
           <h2 className="text-xl font-semibold mb-4 text-gray-800">Usage Examples</h2>
           <div className="bg-gray-900 text-gray-100 p-4 rounded-lg text-sm overflow-x-auto">
-            <pre>{`// Date input
+            <pre>{`// Dropdown/Select input
+<AppSelectInput
+  label="Select Country"
+  placeholder="Select country"
+  value={selectedCountry}
+  onValueChange={setSelectedCountry}
+  options={countryOptions}
+  required
+/>
+
+// Date input
 <AppDateInput
   label="Service Date"
   placeholder="mm/dd/yyyy"
