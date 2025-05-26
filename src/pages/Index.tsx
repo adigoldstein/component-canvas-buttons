@@ -34,6 +34,12 @@ export default function Index() {
       description: 'Dropdown menu component for user profile actions with customizable styling and accessibility features.',
       route: '/profile-menu',
       color: 'bg-indigo-500 hover:bg-indigo-600'
+    },
+    {
+      title: 'Hamburger Menu',
+      description: 'Navigation dropdown menu triggered by a hamburger icon, perfect for mobile and compact layouts.',
+      route: '/hamburger-menu',
+      color: 'bg-cyan-500 hover:bg-cyan-600'
     }
   ];
 
