@@ -44,7 +44,10 @@
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
 
-    /* Custom button colors matching the screenshot */
+    /* Custom button colors with gradient */
+    --Gradient-L-1: #E10514;
+    --Gradient-L-2: #A2191C;
+    --Gradient: linear-gradient(180deg, var(--Gradient-L-1) 0%, var(--Gradient-L-2) 100%);
     --button-coral: 5 85% 55%;
     --button-coral-hover: 5 85% 50%;
     --button-coral-active: 5 85% 45%;
