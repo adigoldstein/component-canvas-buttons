@@ -29,7 +29,7 @@ export const BackButton: React.FC<BackButtonProps> = ({
         'text-gray-600 hover:text-gray-800',
         'bg-transparent hover:bg-gray-50',
         'rounded-md transition-colors duration-200',
-        'focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2',
+        'focus:outline-none',
         'disabled:opacity-50 disabled:cursor-not-allowed',
         className
       )}
