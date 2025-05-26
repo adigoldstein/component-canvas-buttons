@@ -2,10 +2,11 @@
 import React, { useState } from 'react';
 import { Stepper } from './lib/Stepper';
 import { StepData } from './lib/Stepper/types';
-import { User } from 'lucide-react';
+import { MemberCard } from './lib/MemberCard';
 
 const StepperShowcase: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [selectedMember, setSelectedMember] = useState<string | null>(null);
 
   const steps: StepData[] = [
     { title: 'Step 1: Claim Type Selection' },
@@ -33,6 +34,10 @@ const StepperShowcase: React.FC = () => {
     return stepIndex < currentStep;
   };
 
+  const handleMemberSelect = (member: string) => {
+    setSelectedMember(member);
+  };
+
   const renderStepContent = (stepIndex: number) => {
     switch (stepIndex) {
       case 0:
@@ -41,13 +46,12 @@ const StepperShowcase: React.FC = () => {
             <p className="text-gray-600 mb-6">Select Covered Member *</p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {['Me', 'Spouse', 'Child 1', 'Child 2'].map((member) => (
-                <div
+                <MemberCard
                   key={member}
-                  className="flex flex-col items-center p-4 border-2 border-gray-200 rounded-lg hover:border-red-300 cursor-pointer transition-colors"
-                >
-                  <User className="w-8 h-8 text-gray-400 mb-2" />
-                  <span className="text-sm font-medium">{member}</span>
-                </div>
+                  member={member}
+                  isSelected={selectedMember === member}
+                  onClick={() => handleMemberSelect(member)}
+                />
               ))}
             </div>
           </div>
@@ -106,7 +110,7 @@ const StepperShowcase: React.FC = () => {
         <section className="mt-12">
           <h2 className="text-xl font-semibold mb-4 text-gray-800">Usage Example</h2>
           <div className="bg-gray-900 text-gray-100 p-4 rounded-lg text-sm overflow-x-auto">
-            <pre>{`// Basic usage
+            <pre>{`// Basic usage with MemberCard component
 const steps = [
   { title: 'Step 1: Claim Type Selection' },
   { title: 'Step 2: Upload Documents' },
@@ -121,6 +125,13 @@ const steps = [
   renderStepContent={renderStepContent}
   isStepCompleted={isStepCompleted}
   allowStepClick={true}
+/>
+
+// MemberCard usage
+<MemberCard
+  member="Me"
+  isSelected={selectedMember === "Me"}
+  onClick={() => handleMemberSelect("Me")}
 />`}</pre>
           </div>
         </section>
