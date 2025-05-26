@@ -61,13 +61,13 @@ const Stepper: React.FC<StepperProps> = ({
   return (
     <div className={cn('w-full max-w-4xl mx-auto space-y-6', className)}>
       {/* Steps Header */}
-      <StepHeader
+      {/* <StepHeader
         steps={steps}
         currentStep={currentStep}
         onStepClick={handleStepClick}
         isStepCompleted={isCompleted}
         allowStepClick={allowStepClick}
-      />
+      /> */}
 
       {/* All Steps */}
       <div className="space-y-4">
