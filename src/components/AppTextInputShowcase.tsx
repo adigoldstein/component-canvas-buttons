@@ -1,8 +1,8 @@
-
 import React, { useState } from 'react';
 import { AppTextInput } from './lib/AppTextInput';
 import { AppDateInput } from './lib/AppDateInput';
 import { AppSelectInput, SelectOption } from './lib/AppSelectInput';
+import { AppTextArea } from './lib/AppTextArea';
 
 const AppTextInputShowcase: React.FC = () => {
   const [textValue, setTextValue] = useState('');
@@ -16,6 +16,7 @@ const AppTextInputShowcase: React.FC = () => {
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
   const [selectedTreatments, setSelectedTreatments] = useState('');
+  const [descriptionValue, setDescriptionValue] = useState('This is a description of the treatment with some sample text.');
 
   const countryOptions: SelectOption[] = [
     { value: 'us', label: 'United States' },
@@ -99,6 +100,19 @@ const AppTextInputShowcase: React.FC = () => {
               onDateChange={setBirthDate}
             />
           </div>
+        </section>
+
+        {/* TextArea Input */}
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold mb-4 text-gray-800">TextArea Input</h2>
+          <AppTextArea
+            label="Description of Treatment"
+            placeholder="Please describe the treatment in detail..."
+            value={descriptionValue}
+            onChange={setDescriptionValue}
+            maxLength={500}
+            rows={6}
+          />
         </section>
 
         {/* Basic Text Input */}
@@ -189,7 +203,17 @@ const AppTextInputShowcase: React.FC = () => {
         <section className="mb-8">
           <h2 className="text-xl font-semibold mb-4 text-gray-800">Usage Examples</h2>
           <div className="bg-gray-900 text-gray-100 p-4 rounded-lg text-sm overflow-x-auto">
-            <pre>{`// Dropdown/Select input
+            <pre>{`// TextArea input
+<AppTextArea
+  label="Description of Treatment"
+  placeholder="Please describe the treatment..."
+  value={descriptionValue}
+  onChange={setDescriptionValue}
+  maxLength={500}
+  rows={6}
+/>
+
+// Dropdown/Select input
 <AppSelectInput
   label="Select Country"
   placeholder="Select country"
