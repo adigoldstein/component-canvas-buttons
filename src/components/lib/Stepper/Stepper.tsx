@@ -24,18 +24,6 @@ const Stepper: React.FC<StepperProps> = ({
   allowMultipleSelection = false,
   className,
 }) => {
-  const handleNext = () => {
-    if (currentStep < steps.length - 1 && onNext) {
-      onNext();
-    }
-  };
-
-  const handleBack = () => {
-    if (currentStep > 0 && onBack) {
-      onBack();
-    }
-  };
-
   const handleStepClick = (stepIndex: number) => {
     if (allowStepClick && onStepChange) {
       onStepChange(stepIndex);
@@ -89,8 +77,8 @@ const Stepper: React.FC<StepperProps> = ({
           getStepContent={getStepContent}
           currentStep={currentStep}
           totalSteps={steps.length}
-          onNext={handleNext}
-          onBack={handleBack}
+          onNext={onNext}
+          onBack={onBack}
           nextButtonText={nextButtonText}
           backButtonText={backButtonText}
           hideBackButton={hideBackButton}

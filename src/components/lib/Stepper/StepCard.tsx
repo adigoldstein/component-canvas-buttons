@@ -1,9 +1,9 @@
+
 import React from 'react';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { StepData } from './types';
-import StepNavigation from './StepNavigation';
 import SubStepCard from './SubStepCard';
 import MemberSelector from './MemberSelector';
 
@@ -40,14 +40,6 @@ const StepCard: React.FC<StepCardProps> = ({
   onMemberToggle,
   onSubStepOptionToggle,
   getStepContent,
-  currentStep,
-  totalSteps,
-  onNext,
-  onBack,
-  nextButtonText,
-  backButtonText,
-  hideBackButton,
-  hideNextButton,
   allowMultipleSelection = false,
 }) => {
   const hasSubSteps = step.subSteps && step.subSteps.length > 0;
@@ -123,42 +115,27 @@ const StepCard: React.FC<StepCardProps> = ({
             </div>
           )}
 
-          {/* Sub Steps Section - displayed as a grid and active content */}
+          {/* Sub Steps Section - show all revealed sub-steps */}
           {hasSubSteps && (
             <div className="space-y-6">
-              {/* Sub-step navigation indicators */}
-              <div className="flex items-center gap-4">
-                <h4 className="font-medium text-gray-700">Steps to Complete:</h4>
-                <div className="flex gap-2">
-                  {step.subSteps!.map((subStep, subStepIndex) => (
+              {step.subSteps!.map((subStep, subStepIndex) => {
+                if (!isSubStepRevealed(subStepIndex)) return null;
+                
+                return (
+                  <div key={subStep.id} className="space-y-4">
                     <SubStepCard
-                      key={subStep.id}
                       subStep={subStep}
                       subStepIndex={subStepIndex}
                       parentStepIndex={stepIndex}
-                      isActive={false}
+                      isActive={subStepIndex === currentSubStep}
                       isCompleted={isSubStepCompleted(subStepIndex)}
-                      isRevealed={isSubStepRevealed(subStepIndex)}
+                      isRevealed={true}
                       onSubStepClick={handleSubStepClick}
                       onOptionToggle={(optionId) => handleSubStepOptionToggle(subStep.id, optionId)}
                     />
-                  ))}
-                </div>
-              </div>
-              
-              {/* Active sub-step content */}
-              {hasSubSteps && isSubStepRevealed(currentSubStep) && (
-                <SubStepCard
-                  subStep={step.subSteps![currentSubStep]}
-                  subStepIndex={currentSubStep}
-                  parentStepIndex={stepIndex}
-                  isActive={true}
-                  isCompleted={isSubStepCompleted(currentSubStep)}
-                  isRevealed={true}
-                  onSubStepClick={handleSubStepClick}
-                  onOptionToggle={(optionId) => handleSubStepOptionToggle(step.subSteps![currentSubStep].id, optionId)}
-                />
-              )}
+                  </div>
+                );
+              })}
             </div>
           )}
 
@@ -166,18 +143,6 @@ const StepCard: React.FC<StepCardProps> = ({
           {!hasSubSteps && !hasMembers && (
             <div>{getStepContent(stepIndex)}</div>
           )}
-
-          {/* Navigation Buttons */}
-          <StepNavigation
-            currentStep={currentStep}
-            totalSteps={totalSteps}
-            onNext={onNext}
-            onBack={onBack}
-            nextButtonText={nextButtonText}
-            backButtonText={backButtonText}
-            hideBackButton={hideBackButton}
-            hideNextButton={hideNextButton}
-          />
         </CardContent>
       </Card>
     );
