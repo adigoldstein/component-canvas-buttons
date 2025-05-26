@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -11,7 +10,7 @@ const getButtonVariantClasses = ({ variant, size, disabled, loading, fullWidth }
     'justify-center',
     'gap-2',
     'font-medium',
-    'rounded-lg',
+    'rounded-full',
     'transition-all',
     'duration-200',
     'focus:outline-none',
