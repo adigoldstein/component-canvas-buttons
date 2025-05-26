@@ -28,7 +28,7 @@ const getButtonVariantClasses = ({ variant, size, disabled, loading, fullWidth }
     lg: ['px-6', 'py-3', 'text-lg', 'h-12'],
   };
 
-  // Variant classes - modified to handle fullWidth white background
+  // Variant classes - ensure fullWidth primary has white background
   const variantClasses = {
     primary: fullWidth ? [
       'text-[var(--Gradient-L-1)]',
@@ -38,6 +38,7 @@ const getButtonVariantClasses = ({ variant, size, disabled, loading, fullWidth }
       'hover:bg-gray-50',
       'focus:ring-red-500',
       'disabled:opacity-60',
+      '!bg-white', // Force white background
     ] : [
       'text-white',
       'border',
