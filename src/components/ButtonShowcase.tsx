@@ -1,10 +1,16 @@
+
 import React from 'react';
 import { Upload, Download, Settings, Trash2, Plus, Check } from 'lucide-react';
 import { Button } from './lib/button-library';
+import { BackButton } from './lib/BackButton';
 
 const ButtonShowcase: React.FC = () => {
   const handleClick = () => {
     console.log('Button clicked!');
+  };
+
+  const handleBackClick = () => {
+    console.log('Back button clicked!');
   };
 
   return (
@@ -13,6 +19,20 @@ const ButtonShowcase: React.FC = () => {
         <h1 className="text-3xl font-bold text-center mb-8 text-gray-900">
           Button Component Library
         </h1>
+
+        {/* Back Button */}
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold mb-4 text-gray-800">Back Button</h2>
+          <div className="flex flex-wrap gap-4">
+            <BackButton onClick={handleBackClick} />
+            <BackButton onClick={handleBackClick} label="Go Back" />
+            <BackButton 
+              onClick={handleBackClick} 
+              label="Return to Previous Page"
+              className="text-blue-600 hover:text-blue-800"
+            />
+          </div>
+        </section>
 
         {/* Basic Variants */}
         <section className="mb-8">
@@ -161,7 +181,11 @@ const ButtonShowcase: React.FC = () => {
         <section className="mb-8">
           <h2 className="text-xl font-semibold mb-4 text-gray-800">Usage Examples</h2>
           <div className="bg-gray-900 text-gray-100 p-4 rounded-lg text-sm overflow-x-auto">
-            <pre>{`// Basic usage
+            <pre>{`// BackButton usage
+<BackButton onClick={handleBackClick} />
+<BackButton onClick={handleBackClick} label="Go Back" />
+
+// Basic Button usage
 <Button variant="primary" onClick={handleClick}>
   Choose Files
 </Button>
