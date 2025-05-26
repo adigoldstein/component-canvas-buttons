@@ -10,6 +10,8 @@ import NotFound from "./pages/NotFound";
 import OTPDemo from "./pages/OTPDemo";
 import ButtonDemo from "./pages/ButtonDemo";
 import ShowcaseOverview from "./pages/ShowcaseOverview";
+import StepperDemo from "./pages/StepperDemo";
+import InputDemo from "./pages/InputDemo";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +26,8 @@ const App: React.FC = () => (
           <Route path="/showcases" element={<ShowcaseOverview />} />
           <Route path="/buttons" element={<ButtonDemo />} />
           <Route path="/otp" element={<OTPDemo />} />
+          <Route path="/stepper" element={<StepperDemo />} />
+          <Route path="/inputs" element={<InputDemo />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
