@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { Upload, Download, Settings, Trash2, Plus, Check } from 'lucide-react';
-import { Button } from './ui/button-library';
+import { Button } from './lib/button-library';
 
 const ButtonShowcase: React.FC = () => {
   const handleClick = () => {
