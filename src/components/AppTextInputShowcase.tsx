@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AppTextInput } from './lib/AppTextInput';
 import { AppDateInput } from './lib/AppDateInput';
 import { AppSelectInput, SelectOption } from './lib/AppSelectInput';
 import { AppTextArea } from './lib/AppTextArea';
+import BackButton from './lib/BackButton';
 
 const AppTextInputShowcase: React.FC = () => {
+  const navigate = useNavigate();
+
   const [textValue, setTextValue] = useState('');
   const [emailValue, setEmailValue] = useState('');
   const [ageValue, setAgeValue] = useState('');
@@ -43,9 +47,17 @@ const AppTextInputShowcase: React.FC = () => {
     { value: '5', label: '5+ Treatments' },
   ];
 
+  const handleBack = () => {
+    navigate('/');
+  };
+
   return (
     <div className="p-8 space-y-8 bg-gray-50 min-h-screen">
       <div className="max-w-2xl mx-auto">
+        <div className="mb-8">
+          <BackButton onClick={handleBack} />
+        </div>
+
         <h1 className="text-3xl font-bold text-center mb-8 text-gray-900">
           App Input Component Library
         </h1>

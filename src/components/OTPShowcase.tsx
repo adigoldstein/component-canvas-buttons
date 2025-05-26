@@ -1,11 +1,18 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { OTPInput } from './lib/OTPInput';
+import BackButton from './lib/BackButton';
 
 const OTPShowcase: React.FC = () => {
+  const navigate = useNavigate();
   const [otp, setOtp] = useState('');
   const [otp4, setOtp4] = useState('');
   const [isComplete, setIsComplete] = useState(false);
+
+  const handleBack = () => {
+    navigate('/');
+  };
 
   const handleOTPChange = (value: string) => {
     setOtp(value);
@@ -19,6 +26,10 @@ const OTPShowcase: React.FC = () => {
   return (
     <div className="p-8 space-y-8 bg-gray-50 min-h-screen">
       <div className="max-w-4xl mx-auto">
+        <div className="mb-8">
+          <BackButton onClick={handleBack} />
+        </div>
+
         <h1 className="text-3xl font-bold text-center mb-8 text-gray-900">
           OTP Input Component
         </h1>

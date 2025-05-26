@@ -1,21 +1,28 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Upload, Download, Settings, Trash2, Plus, Check } from 'lucide-react';
 import { Button } from './lib/button-library';
 import { BackButton } from './lib/BackButton';
 
 const ButtonShowcase: React.FC = () => {
+  const navigate = useNavigate();
+
   const handleClick = () => {
     console.log('Button clicked!');
   };
 
   const handleBackClick = () => {
-    console.log('Back button clicked!');
+    navigate('/');
   };
 
   return (
     <div className="p-8 space-y-8 bg-gray-50 min-h-screen">
       <div className="max-w-4xl mx-auto">
+        <div className="mb-8">
+          <BackButton onClick={handleBackClick} />
+        </div>
+
         <h1 className="text-3xl font-bold text-center mb-8 text-gray-900">
           Button Component Library
         </h1>
