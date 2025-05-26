@@ -28,6 +28,12 @@ export default function Index() {
       description: 'Collection of form input components including text, date, select, and textarea inputs.',
       route: '/inputs',
       color: 'bg-orange-500 hover:bg-orange-600'
+    },
+    {
+      title: 'Profile Menu',
+      description: 'Dropdown menu component for user profile actions with customizable styling and accessibility features.',
+      route: '/profile-menu',
+      color: 'bg-indigo-500 hover:bg-indigo-600'
     }
   ];
 
