@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { AppTextInput } from './lib/AppTextInput';
+import { AppDateInput } from './lib/AppDateInput';
 
 const AppTextInputShowcase: React.FC = () => {
   const [textValue, setTextValue] = useState('');
@@ -9,13 +10,35 @@ const AppTextInputShowcase: React.FC = () => {
   const [passwordValue, setPasswordValue] = useState('');
   const [multilineValue, setMultilineValue] = useState('');
   const [errorValue, setErrorValue] = useState('invalid-email');
+  const [serviceDate, setServiceDate] = useState<Date | undefined>();
+  const [birthDate, setBirthDate] = useState<Date | undefined>();
 
   return (
     <div className="p-8 space-y-8 bg-gray-50 min-h-screen">
       <div className="max-w-2xl mx-auto">
         <h1 className="text-3xl font-bold text-center mb-8 text-gray-900">
-          AppTextInput Component Library
+          AppTextInput & AppDateInput Component Library
         </h1>
+
+        {/* Date Input Examples */}
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold mb-4 text-gray-800">Date Inputs</h2>
+          <div className="space-y-4">
+            <AppDateInput
+              label="Service Date"
+              placeholder="mm/dd/yyyy"
+              value={serviceDate}
+              onDateChange={setServiceDate}
+              required
+            />
+            <AppDateInput
+              label="Date of Birth"
+              placeholder="Select your birth date"
+              value={birthDate}
+              onDateChange={setBirthDate}
+            />
+          </div>
+        </section>
 
         {/* Basic Text Input */}
         <section className="mb-8">
@@ -105,7 +128,16 @@ const AppTextInputShowcase: React.FC = () => {
         <section className="mb-8">
           <h2 className="text-xl font-semibold mb-4 text-gray-800">Usage Examples</h2>
           <div className="bg-gray-900 text-gray-100 p-4 rounded-lg text-sm overflow-x-auto">
-            <pre>{`// Text input
+            <pre>{`// Date input
+<AppDateInput
+  label="Service Date"
+  placeholder="mm/dd/yyyy"
+  value={serviceDate}
+  onDateChange={setServiceDate}
+  required
+/>
+
+// Text input
 <AppTextInput
   label="Name"
   placeholder="Enter your full name"
@@ -122,15 +154,6 @@ const AppTextInputShowcase: React.FC = () => {
   keyboardType="email"
 />
 
-// Number input
-<AppTextInput
-  label="Age"
-  placeholder="Enter your age"
-  value={ageValue}
-  onChangeText={setAgeValue}
-  keyboardType="number"
-/>
-
 // Password input
 <AppTextInput
   label="Password"
@@ -138,14 +161,6 @@ const AppTextInputShowcase: React.FC = () => {
   value={passwordValue}
   onChangeText={setPasswordValue}
   secureTextEntry={true}
-/>
-
-// With error
-<AppTextInput
-  label="Email"
-  value={emailValue}
-  onChangeText={setEmailValue}
-  error="Please enter a valid email address"
 />`}</pre>
           </div>
         </section>
