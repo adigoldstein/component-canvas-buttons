@@ -2,16 +2,16 @@
 import React from 'react';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { StepData } from './types';
+import { SubStepData } from './types';
 
 interface SubStepCardProps {
-  subStep: StepData;
+  subStep: SubStepData;
   subStepIndex: number;
   isActive: boolean;
   isCompleted: boolean;
   isRevealed: boolean;
   onSubStepClick: (subStepIndex: number) => void;
-  getStepContent: (stepIndex: number, subStepIndex: number) => React.ReactNode;
+  onOptionToggle: (optionId: string) => void;
   parentStepIndex: number;
 }
 
@@ -22,24 +22,41 @@ const SubStepCard: React.FC<SubStepCardProps> = ({
   isCompleted,
   isRevealed,
   onSubStepClick,
-  getStepContent,
-  parentStepIndex,
+  onOptionToggle,
 }) => {
   if (!isRevealed) {
     return null;
   }
 
   if (isActive) {
+    const gridCols = {
+      2: 'grid-cols-2',
+      3: 'grid-cols-3',
+      4: 'grid-cols-4',
+    }[subStep.maxCardsPerRow || 3] || 'grid-cols-3';
+
     return (
-      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="flex items-center justify-center w-8 h-8 bg-red-500 text-white rounded-full">
-            {subStep.icon || <span className="text-sm">{subStepIndex + 1}</span>}
-          </div>
-          <h5 className="font-medium text-red-600">{subStep.title}</h5>
-        </div>
-        <div className="ml-11">
-          {getStepContent(parentStepIndex, subStepIndex)}
+      <div className="space-y-4">
+        <h4 className="font-medium text-gray-700">{subStep.title} *</h4>
+        <div className={cn('grid gap-4', gridCols)}>
+          {subStep.options.map((option) => (
+            <div
+              key={option.id}
+              className={cn(
+                'flex flex-col items-center p-4 border-2 rounded-lg cursor-pointer transition-colors min-h-[100px] justify-center',
+                {
+                  'border-red-500 bg-red-50': option.selected,
+                  'border-gray-200 hover:border-red-300 bg-white': !option.selected,
+                }
+              )}
+              onClick={() => onOptionToggle(option.id)}
+            >
+              <div className="flex items-center justify-center w-8 h-8 mb-2">
+                {option.icon}
+              </div>
+              <span className="text-sm font-medium text-center">{option.name}</span>
+            </div>
+          ))}
         </div>
       </div>
     );

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -17,6 +16,7 @@ interface StepCardProps {
   onStepClick: (stepIndex: number) => void;
   onSubStepClick?: (stepIndex: number, subStepIndex: number) => void;
   onMemberToggle?: (stepId: string, memberId: string) => void;
+  onSubStepOptionToggle?: (stepId: string, subStepId: string, optionId: string) => void;
   getStepContent: (stepIndex: number, subStepIndex?: number) => React.ReactNode;
   currentStep: number;
   totalSteps: number;
@@ -38,6 +38,7 @@ const StepCard: React.FC<StepCardProps> = ({
   onStepClick,
   onSubStepClick,
   onMemberToggle,
+  onSubStepOptionToggle,
   getStepContent,
   currentStep,
   totalSteps,
@@ -61,6 +62,12 @@ const StepCard: React.FC<StepCardProps> = ({
   const handleSubStepClick = (subStepIndex: number) => {
     if (onSubStepClick) {
       onSubStepClick(stepIndex, subStepIndex);
+    }
+  };
+
+  const handleSubStepOptionToggle = (subStepId: string, optionId: string) => {
+    if (onSubStepOptionToggle) {
+      onSubStepOptionToggle(step.id, subStepId, optionId);
     }
   };
 
@@ -116,40 +123,41 @@ const StepCard: React.FC<StepCardProps> = ({
             </div>
           )}
 
-          {/* Sub Steps Section - displayed as a grid of member-like cards */}
+          {/* Sub Steps Section - displayed as a grid and active content */}
           {hasSubSteps && (
-            <div className="space-y-4">
-              <h4 className="font-medium text-gray-700">Steps to Complete:</h4>
-              <div className="grid grid-cols-4 gap-4">
-                {step.subSteps!.map((subStep, subStepIndex) => (
-                  <SubStepCard
-                    key={subStep.id}
-                    subStep={subStep}
-                    subStepIndex={subStepIndex}
-                    parentStepIndex={stepIndex}
-                    isActive={subStepIndex === currentSubStep}
-                    isCompleted={isSubStepCompleted(subStepIndex)}
-                    isRevealed={isSubStepRevealed(subStepIndex)}
-                    onSubStepClick={handleSubStepClick}
-                    getStepContent={getStepContent}
-                  />
-                ))}
+            <div className="space-y-6">
+              {/* Sub-step navigation indicators */}
+              <div className="flex items-center gap-4">
+                <h4 className="font-medium text-gray-700">Steps to Complete:</h4>
+                <div className="flex gap-2">
+                  {step.subSteps!.map((subStep, subStepIndex) => (
+                    <SubStepCard
+                      key={subStep.id}
+                      subStep={subStep}
+                      subStepIndex={subStepIndex}
+                      parentStepIndex={stepIndex}
+                      isActive={false}
+                      isCompleted={isSubStepCompleted(subStepIndex)}
+                      isRevealed={isSubStepRevealed(subStepIndex)}
+                      onSubStepClick={handleSubStepClick}
+                      onOptionToggle={(optionId) => handleSubStepOptionToggle(subStep.id, optionId)}
+                    />
+                  ))}
+                </div>
               </div>
               
               {/* Active sub-step content */}
               {hasSubSteps && isSubStepRevealed(currentSubStep) && (
-                <div className="mt-4">
-                  <SubStepCard
-                    subStep={step.subSteps![currentSubStep]}
-                    subStepIndex={currentSubStep}
-                    parentStepIndex={stepIndex}
-                    isActive={true}
-                    isCompleted={isSubStepCompleted(currentSubStep)}
-                    isRevealed={true}
-                    onSubStepClick={handleSubStepClick}
-                    getStepContent={getStepContent}
-                  />
-                </div>
+                <SubStepCard
+                  subStep={step.subSteps![currentSubStep]}
+                  subStepIndex={currentSubStep}
+                  parentStepIndex={stepIndex}
+                  isActive={true}
+                  isCompleted={isSubStepCompleted(currentSubStep)}
+                  isRevealed={true}
+                  onSubStepClick={handleSubStepClick}
+                  onOptionToggle={(optionId) => handleSubStepOptionToggle(step.subSteps![currentSubStep].id, optionId)}
+                />
               )}
             </div>
           )}

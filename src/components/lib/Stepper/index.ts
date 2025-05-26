@@ -5,4 +5,5 @@ export { default as StepCard } from './StepCard';
 export { default as StepNavigation } from './StepNavigation';
 export { default as SubStepCard } from './SubStepCard';
 export { default as MemberSelector } from './MemberSelector';
-export type { StepperProps, StepData, Member } from './types';
+export { default as SelectionGrid } from './SelectionGrid';
+export type { StepperProps, StepData, SubStepData, Member, SelectionOption } from './types';

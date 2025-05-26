@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Stepper } from './lib/Stepper';
-import { StepData, Member } from './lib/Stepper/types';
+import { StepData, SubStepData } from './lib/Stepper/types';
 import BackButton from './lib/BackButton';
-import { User, FileText, Upload, Settings, Home, Check } from 'lucide-react';
+import { User, FileText, Upload, Settings, Home, Check, Heart, Shield, Stethoscope, Plus } from 'lucide-react';
 
 const StepperShowcase: React.FC = () => {
   const navigate = useNavigate();
@@ -12,19 +12,58 @@ const StepperShowcase: React.FC = () => {
   const [stepData, setStepData] = useState<StepData[]>([
     {
       id: 'step-1',
-      title: 'Member & Claim Type Selection',
+      title: 'Claim Type Selection',
       icon: <User className="w-4 h-4" />,
       members: [
-        { id: 'me', name: 'Me', selected: false },
+        { id: 'hof', name: 'HOF', selected: false },
         { id: 'spouse', name: 'Spouse', selected: false },
         { id: 'child1', name: 'Child 1', selected: false },
         { id: 'child2', name: 'Child 2', selected: false },
       ],
       subSteps: [
-        { id: 'sub-1-1', title: 'Select Member', icon: <User className="w-4 h-4" />, completed: false },
-        { id: 'sub-1-2', title: 'Choose Claim Type', icon: <FileText className="w-4 h-4" />, completed: false },
-        { id: 'sub-1-3', title: 'Verify Information', icon: <Check className="w-4 h-4" />, completed: false },
-        { id: 'sub-1-4', title: 'Final Review', icon: <Settings className="w-4 h-4" />, completed: false },
+        {
+          id: 'sub-1-1',
+          title: 'Select Service Group',
+          icon: <Heart className="w-4 h-4" />,
+          completed: false,
+          selectionType: 'single',
+          maxCardsPerRow: 3,
+          autoProgress: true,
+          options: [
+            { id: 'group1', name: 'Group 1', icon: <Heart className="w-4 h-4" />, selected: false },
+            { id: 'group2', name: 'Group 2', icon: <Shield className="w-4 h-4" />, selected: false },
+            { id: 'group3', name: 'Group 3', icon: <Plus className="w-4 h-4" />, selected: false },
+          ]
+        },
+        {
+          id: 'sub-1-2',
+          title: 'Select Service Type',
+          icon: <FileText className="w-4 h-4" />,
+          completed: false,
+          selectionType: 'single',
+          maxCardsPerRow: 3,
+          autoProgress: true,
+          options: [
+            { id: 'type1', name: 'Type 1', icon: <Plus className="w-4 h-4" />, selected: false },
+            { id: 'type2', name: 'Type 2', icon: <Plus className="w-4 h-4" />, selected: false },
+            { id: 'type3', name: 'Type 3', icon: <Plus className="w-4 h-4" />, selected: false },
+          ]
+        },
+        {
+          id: 'sub-1-3',
+          title: 'Select Specialty',
+          icon: <Stethoscope className="w-4 h-4" />,
+          completed: false,
+          selectionType: 'single',
+          maxCardsPerRow: 3,
+          autoProgress: false,
+          options: [
+            { id: 'specialty1', name: 'Specialty 1', icon: <Plus className="w-4 h-4" />, selected: false },
+            { id: 'specialty2', name: 'Specialty 2', icon: <Plus className="w-4 h-4" />, selected: false },
+            { id: 'specialty3', name: 'Specialty 3', icon: <Plus className="w-4 h-4" />, selected: false },
+            { id: 'specialty4', name: 'Specialty 4', icon: <Plus className="w-4 h-4" />, selected: false },
+          ]
+        },
       ],
       required: true,
       completed: false,
@@ -44,6 +83,32 @@ const StepperShowcase: React.FC = () => {
       completed: false,
     },
   ]);
+
+  // Auto-progression logic
+  useEffect(() => {
+    const currentStepData = stepData[currentStep];
+    if (currentStepData.subSteps && currentSubStep < currentStepData.subSteps.length) {
+      const currentSubStepData = currentStepData.subSteps[currentSubStep];
+      
+      // Check if current sub-step should auto-progress
+      if (currentSubStepData.autoProgress) {
+        const hasSelection = currentSubStepData.options.some(option => option.selected);
+        
+        if (hasSelection && !currentSubStepData.completed) {
+          // Mark current sub-step as completed and move to next
+          setTimeout(() => {
+            const updatedSteps = [...stepData];
+            updatedSteps[currentStep].subSteps![currentSubStep].completed = true;
+            setStepData(updatedSteps);
+            
+            if (currentSubStep < currentStepData.subSteps!.length - 1) {
+              setCurrentSubStep(currentSubStep + 1);
+            }
+          }, 500);
+        }
+      }
+    }
+  }, [stepData, currentStep, currentSubStep]);
 
   const handleBack = () => {
     navigate('/');
@@ -104,6 +169,40 @@ const StepperShowcase: React.FC = () => {
               ? { ...member, selected: !member.selected }
               : member
           ),
+        };
+      }
+      return step;
+    });
+    setStepData(updatedSteps);
+  };
+
+  const handleSubStepOptionToggle = (stepId: string, subStepId: string, optionId: string) => {
+    const updatedSteps = stepData.map(step => {
+      if (step.id === stepId && step.subSteps) {
+        return {
+          ...step,
+          subSteps: step.subSteps.map(subStep => {
+            if (subStep.id === subStepId) {
+              return {
+                ...subStep,
+                options: subStep.options.map(option => {
+                  if (subStep.selectionType === 'single') {
+                    // Single selection: deselect all others
+                    return {
+                      ...option,
+                      selected: option.id === optionId ? !option.selected : false
+                    };
+                  } else {
+                    // Multiple selection: toggle only the clicked option
+                    return option.id === optionId 
+                      ? { ...option, selected: !option.selected }
+                      : option;
+                  }
+                })
+              };
+            }
+            return subStep;
+          })
         };
       }
       return step;
@@ -236,6 +335,7 @@ const StepperShowcase: React.FC = () => {
           onBack={handleBackStepper}
           onStepChange={handleStepChange}
           onMemberToggle={handleMemberToggle}
+          onSubStepOptionToggle={handleSubStepOptionToggle}
           renderStepContent={renderStepContent}
           isStepCompleted={isStepCompleted}
           allowStepClick={true}
@@ -246,35 +346,29 @@ const StepperShowcase: React.FC = () => {
         <section className="mt-12">
           <h2 className="text-xl font-semibold mb-4 text-gray-800">Usage Example</h2>
           <div className="bg-gray-900 text-gray-100 p-4 rounded-lg text-sm overflow-x-auto">
-            <pre>{`// Advanced Stepper with nested steps and members
+            <pre>{`// Smart Stepper with auto-progression
 const steps = [
   {
     id: 'step-1',
-    title: 'Member & Claim Type Selection',
-    icon: <User className="w-4 h-4" />,
-    members: [
-      { id: 'me', name: 'Me', selected: false },
-      { id: 'spouse', name: 'Spouse', selected: false },
-    ],
+    title: 'Claim Type Selection',
     subSteps: [
-      { id: 'sub-1-1', title: 'Select Member', icon: <User className="w-4 h-4" />, completed: false },
-      { id: 'sub-1-2', title: 'Choose Claim Type', icon: <FileText className="w-4 h-4" />, completed: false },
-    ],
-    required: true,
-  },
+      {
+        id: 'sub-1-1',
+        title: 'Select Service Group',
+        selectionType: 'single',
+        autoProgress: true,
+        options: [
+          { id: 'group1', name: 'Group 1', selected: false },
+        ]
+      }
+    ]
+  }
 ];
 
 <Stepper
   steps={steps}
-  currentStep={currentStep}
-  currentSubStep={currentSubStep}
-  onNext={handleNext}
-  onBack={handleBack}
-  onStepChange={handleStepChange}
-  onMemberToggle={handleMemberToggle}
-  renderStepContent={renderStepContent}
+  onSubStepOptionToggle={handleSubStepOptionToggle}
   allowStepClick={true}
-  allowMultipleSelection={true}
 />`}</pre>
           </div>
         </section>

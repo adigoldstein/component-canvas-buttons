@@ -12,6 +12,7 @@ const Stepper: React.FC<StepperProps> = ({
   onBack,
   onStepChange,
   onMemberToggle,
+  onSubStepOptionToggle,
   children,
   renderStepContent,
   isStepCompleted,
@@ -84,6 +85,7 @@ const Stepper: React.FC<StepperProps> = ({
           onStepClick={handleStepClick}
           onSubStepClick={handleSubStepClick}
           onMemberToggle={onMemberToggle}
+          onSubStepOptionToggle={onSubStepOptionToggle}
           getStepContent={getStepContent}
           currentStep={currentStep}
           totalSteps={steps.length}
