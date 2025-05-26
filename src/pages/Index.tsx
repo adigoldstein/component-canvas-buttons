@@ -1,24 +1,23 @@
 
-import ButtonShowcase from "@/components/ButtonShowcase";
-import AppTextInputShowcase from "@/components/AppTextInputShowcase";
-import StepperShowcase from "@/components/StepperShowcase";
+import { Link } from "react-router-dom";
+import ButtonShowcase from "../components/ButtonShowcase";
 
-const Index = () => {
+export default function Index() {
   return (
-    <div className="min-h-screen">
-      <div className="container mx-auto">
-        <div className="mb-12">
-          <StepperShowcase />
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto p-4">
+        <div className="mb-8 text-center">
+          <h1 className="text-4xl font-bold mb-4">Component Library Demo</h1>
+          <div className="flex justify-center gap-4">
+            <Link 
+              to="/otp" 
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            >
+              View OTP Input Demo
+            </Link>
+          </div>
         </div>
-        <div className="border-t pt-12 mb-12">
-          <AppTextInputShowcase />
-        </div>
-        <div className="border-t pt-12">
-          <ButtonShowcase />
-        </div>
+        <ButtonShowcase />
       </div>
     </div>
   );
-};
-
-export default Index;
