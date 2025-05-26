@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -27,9 +28,17 @@ const getButtonVariantClasses = ({ variant, size, disabled, loading, fullWidth }
     lg: ['px-6', 'py-3', 'text-lg', 'h-12'],
   };
 
-  // Variant classes
+  // Variant classes - modified to handle fullWidth white background
   const variantClasses = {
-    primary: [
+    primary: fullWidth ? [
+      'text-[var(--Gradient-L-1)]',
+      'bg-white',
+      'border',
+      'border-[var(--Gradient-L-1)]',
+      'hover:bg-gray-50',
+      'focus:ring-red-500',
+      'disabled:opacity-60',
+    ] : [
       'text-white',
       'border',
       'border-transparent',
