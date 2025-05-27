@@ -14,6 +14,7 @@ import StepperDemo from "./pages/StepperDemo";
 import InputDemo from "./pages/InputDemo";
 import ProfileMenuDemo from "./pages/ProfileMenuDemo";
 import HamburgerMenuDemo from "./pages/HamburgerMenuDemo";
+import InfoCardDemo from "./pages/InfoCardDemo";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,7 @@ const App: React.FC = () => (
           <Route path="/inputs" element={<InputDemo />} />
           <Route path="/profile-menu" element={<ProfileMenuDemo />} />
           <Route path="/hamburger-menu" element={<HamburgerMenuDemo />} />
+          <Route path="/info-card" element={<InfoCardDemo />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

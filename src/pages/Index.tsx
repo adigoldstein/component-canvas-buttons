@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
@@ -39,6 +40,12 @@ export default function Index() {
       description: 'Sliding drawer menu triggered by a hamburger icon, perfect for mobile navigation and responsive layouts.',
       route: '/hamburger-menu',
       color: 'bg-cyan-500 hover:bg-cyan-600'
+    },
+    {
+      title: 'Info Card',
+      description: 'Flexible card component for displaying various types of content with customizable headers, footers, and layouts.',
+      route: '/info-card',
+      color: 'bg-rose-500 hover:bg-rose-600'
     }
   ];
 
