@@ -46,6 +46,12 @@ export default function Index() {
       description: 'Flexible card component for displaying various types of content with customizable headers, footers, and layouts.',
       route: '/info-card',
       color: 'bg-rose-500 hover:bg-rose-600'
+    },
+    {
+      title: 'Status Chip',
+      description: 'Color-coded status chips that automatically style based on status keywords like active, submitted, canceled.',
+      route: '/status-chip',
+      color: 'bg-emerald-500 hover:bg-emerald-600'
     }
   ];
 
