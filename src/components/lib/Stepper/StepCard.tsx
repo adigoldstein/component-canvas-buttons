@@ -3,7 +3,7 @@ import React from 'react';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/lib/button-library';
 import { StepData } from './types';
 import SubStepCard from './SubStepCard';
 import MemberSelector from './MemberSelector';
@@ -197,6 +197,7 @@ const StepCard: React.FC<StepCardProps> = ({
             )}
             {!hideNextButton && (
               <Button
+                variant="primary"
                 onClick={onNext}
                 disabled={!areAllRequiredSubStepsCompleted()}
                 className="ml-auto"
