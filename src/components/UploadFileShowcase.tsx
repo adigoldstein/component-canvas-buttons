@@ -1,12 +1,13 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import UploadFile from '@/components/lib/UploadFile';
 import UploadedFileList, { UploadedFile, FileStatus } from '@/components/lib/UploadedFileList';
+import FileUploadWithList from '@/components/lib/FileUploadWithList';
 import { toast } from 'sonner';
 
 const UploadFileShowcase: React.FC = () => {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+  const [combinedFiles, setCombinedFiles] = useState<UploadedFile[]>([]);
 
   // Simulate upload process with different outcomes
   const simulateUpload = (file: File): Promise<void> => {
@@ -112,6 +113,93 @@ const UploadFileShowcase: React.FC = () => {
     }
   };
 
+  const handleCombinedFileUpload = async (files: File[]) => {
+    const newFiles: UploadedFile[] = files.map(file => ({
+      id: `combined-${Date.now()}-${Math.random()}`,
+      name: file.name,
+      size: file.size,
+      type: file.type,
+      status: 'loading' as FileStatus
+    }));
+
+    setCombinedFiles(prev => [...prev, ...newFiles]);
+    toast.success(`Starting upload of ${files.length} file(s)...`);
+
+    // Process each file
+    for (const newFile of newFiles) {
+      const originalFile = files.find(f => f.name === newFile.name);
+      if (!originalFile) continue;
+
+      try {
+        await simulateUpload(originalFile);
+        
+        setCombinedFiles(prev => 
+          prev.map(f => 
+            f.id === newFile.id 
+              ? { ...f, status: 'success' as FileStatus }
+              : f
+          )
+        );
+        toast.success(`${newFile.name} uploaded successfully!`);
+      } catch (error) {
+        setCombinedFiles(prev => 
+          prev.map(f => 
+            f.id === newFile.id 
+              ? { ...f, status: 'error' as FileStatus }
+              : f
+          )
+        );
+        toast.error(`Failed to upload ${newFile.name}`);
+      }
+    }
+  };
+
+  const handleCombinedRemoveFile = (id: string) => {
+    setCombinedFiles(prev => prev.filter(f => f.id !== id));
+    toast.info('File removed');
+  };
+
+  const handleCombinedRetryFile = async (id: string) => {
+    const file = combinedFiles.find(f => f.id === id);
+    if (!file) return;
+
+    // Reset to loading state
+    setCombinedFiles(prev => 
+      prev.map(f => 
+        f.id === id 
+          ? { ...f, status: 'loading' as FileStatus }
+          : f
+      )
+    );
+
+    toast.info(`Retrying upload of ${file.name}...`);
+
+    // Create a fake File object for retry simulation
+    const fakeFile = new File([''], file.name, { type: file.type });
+
+    try {
+      await simulateUpload(fakeFile);
+      
+      setCombinedFiles(prev => 
+        prev.map(f => 
+          f.id === id 
+            ? { ...f, status: 'success' as FileStatus }
+            : f
+        )
+      );
+      toast.success(`${file.name} uploaded successfully!`);
+    } catch (error) {
+      setCombinedFiles(prev => 
+        prev.map(f => 
+          f.id === id 
+            ? { ...f, status: 'error' as FileStatus }
+            : f
+        )
+      );
+      toast.error(`Failed to upload ${file.name}`);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="container mx-auto px-4 max-w-6xl">
@@ -125,12 +213,30 @@ const UploadFileShowcase: React.FC = () => {
         </div>
 
         <div className="grid gap-8">
+          {/* Combined Upload System - New Featured Component */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Combined File Upload & List</CardTitle>
+              <CardDescription>
+                All-in-one component with upload area and file list - perfect for forms and workflows.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <FileUploadWithList
+                onChange={handleCombinedFileUpload}
+                files={combinedFiles}
+                onRemove={handleCombinedRemoveFile}
+                onRetry={handleCombinedRetryFile}
+              />
+            </CardContent>
+          </Card>
+
           {/* Complete Upload System */}
           <Card>
             <CardHeader>
-              <CardTitle>Complete File Upload System</CardTitle>
+              <CardTitle>Separate Components System</CardTitle>
               <CardDescription>
-                Upload files with real-time status feedback, retry failed uploads, and manage your file list.
+                Upload files with real-time status feedback using separate upload and list components.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -189,19 +295,22 @@ const UploadFileShowcase: React.FC = () => {
             <CardHeader>
               <CardTitle>Component API</CardTitle>
               <CardDescription>
-                Props and configuration options for both components.
+                Props and configuration options for all components.
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-2">UploadFile Props</h4>
+                  <h4 className="font-medium text-gray-900 mb-2">FileUploadWithList Props</h4>
                   <div className="bg-gray-50 rounded-lg p-4 font-mono text-sm">
                     <div className="space-y-2">
-                      <div><span className="text-blue-600">onChange</span>: (files: File[]) =&gt; void</div>
+                      <div><span className="text-blue-600">onChange?</span>: (files: File[]) =&gt; void</div>
                       <div><span className="text-blue-600">accept?</span>: string[] <span className="text-gray-500">// default: ['.jpg', '.png', '.pdf']</span></div>
                       <div><span className="text-blue-600">maxSizeMB?</span>: number <span className="text-gray-500">// default: 5</span></div>
                       <div><span className="text-blue-600">multiple?</span>: boolean <span className="text-gray-500">// default: true</span></div>
+                      <div><span className="text-blue-600">files</span>: UploadedFile[]</div>
+                      <div><span className="text-blue-600">onRemove</span>: (id: string) =&gt; void</div>
+                      <div><span className="text-blue-600">onRetry?</span>: (id: string) =&gt; void</div>
                       <div><span className="text-blue-600">className?</span>: string</div>
                     </div>
                   </div>
@@ -221,6 +330,7 @@ const UploadFileShowcase: React.FC = () => {
                 <div>
                   <h4 className="font-medium text-gray-900 mb-2">Features</h4>
                   <ul className="list-disc list-inside space-y-1 text-gray-600">
+                    <li>Combined upload area and file list in one component</li>
                     <li>Drag and drop file upload</li>
                     <li>Manual file selection via button</li>
                     <li>File type and size validation</li>
