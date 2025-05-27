@@ -19,7 +19,7 @@ const MemberChip: React.FC<MemberChipProps> = ({
     
     switch (normalizedLabel) {
       case 'HOF':
-        return 'bg-gray-100';
+        return 'bg-rose-100';
       case 'SP':
       case 'SPOUSE':
         return 'bg-blue-100';
@@ -41,9 +41,9 @@ const MemberChip: React.FC<MemberChipProps> = ({
   };
 
   const sizeClasses = {
-    sm: 'px-2 py-1 text-xs min-w-[32px] h-6',
-    md: 'px-3 py-1.5 text-sm min-w-[40px] h-8',
-    lg: 'px-4 py-2 text-base min-w-[48px] h-10'
+    sm: 'w-8 h-8 text-xs',
+    md: 'w-12 h-12 text-sm md:w-16 md:h-16 md:text-base',
+    lg: 'w-16 h-16 text-base md:w-20 md:h-20 md:text-lg'
   };
 
   const backgroundColorClass = backgroundColor || getDefaultBackgroundColor(label);
