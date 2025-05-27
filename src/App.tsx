@@ -17,6 +17,7 @@ import HamburgerMenuDemo from "./pages/HamburgerMenuDemo";
 import InfoCardDemo from "./pages/InfoCardDemo";
 import StatusChipDemo from "./pages/StatusChipDemo";
 import UploadFileDemo from "./pages/UploadFileDemo";
+import CheckboxDisclaimerDemo from "./pages/CheckboxDisclaimerDemo";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App: React.FC = () => (
           <Route path="/info-card" element={<InfoCardDemo />} />
           <Route path="/status-chip" element={<StatusChipDemo />} />
           <Route path="/upload-file" element={<UploadFileDemo />} />
+          <Route path="/checkbox-disclaimer" element={<CheckboxDisclaimerDemo />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

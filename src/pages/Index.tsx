@@ -57,6 +57,12 @@ export default function Index() {
       description: 'Drag-and-drop file upload component with support for multiple file types, size validation, and visual feedback.',
       route: '/upload-file',
       color: 'bg-amber-500 hover:bg-amber-600'
+    },
+    {
+      title: 'Checkbox Disclaimer',
+      description: 'Checkbox component paired with disclaimer text, perfect for terms acceptance and information confirmations.',
+      route: '/checkbox-disclaimer',
+      color: 'bg-slate-500 hover:bg-slate-600'
     }
   ];
 
