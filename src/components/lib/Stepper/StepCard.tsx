@@ -162,7 +162,7 @@ const StepCard: React.FC<StepCardProps> = ({
                 
                 return (
                   <div key={subStep.id} className="space-y-4">
-                    <h4 className="text-gray-600 font-medium">{subStep.title}</h4>
+                    <p className="text-gray-600 mb-4">{subStep.title}</p>
                     <SubStepCard
                       subStep={subStep}
                       subStepIndex={subStepIndex}
