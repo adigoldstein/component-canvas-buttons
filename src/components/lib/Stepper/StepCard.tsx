@@ -3,6 +3,7 @@ import React from 'react';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { StepData } from './types';
 import SubStepCard from './SubStepCard';
 import MemberSelector from './MemberSelector';
@@ -40,6 +41,12 @@ const StepCard: React.FC<StepCardProps> = ({
   onMemberToggle,
   onSubStepOptionToggle,
   getStepContent,
+  onNext,
+  onBack,
+  nextButtonText,
+  backButtonText,
+  hideBackButton,
+  hideNextButton,
   allowMultipleSelection = false,
 }) => {
   const hasSubSteps = step.subSteps && step.subSteps.length > 0;
@@ -48,12 +55,6 @@ const StepCard: React.FC<StepCardProps> = ({
   const handleMemberToggle = (memberId: string) => {
     if (onMemberToggle) {
       onMemberToggle(step.id, memberId);
-    }
-  };
-
-  const handleSubStepClick = (subStepIndex: number) => {
-    if (onSubStepClick) {
-      onSubStepClick(stepIndex, subStepIndex);
     }
   };
 
@@ -67,9 +68,47 @@ const StepCard: React.FC<StepCardProps> = ({
     return step.subSteps?.[subStepIndex]?.completed || false;
   };
 
+  // Check if at least one member is selected
+  const hasSelectedMembers = () => {
+    return step.members?.some(member => member.selected) || false;
+  };
+
+  // Check if a sub-step should be revealed
   const isSubStepRevealed = (subStepIndex: number) => {
-    if (subStepIndex === 0) return true;
+    // First sub-step only appears after member selection
+    if (subStepIndex === 0) {
+      return hasSelectedMembers();
+    }
+    
+    // Subsequent sub-steps appear after previous one is completed
     return isSubStepCompleted(subStepIndex - 1);
+  };
+
+  // Check if all required sub-steps are completed for Next button
+  const areAllRequiredSubStepsCompleted = () => {
+    if (!hasMembers || !hasSubSteps) return true;
+    
+    // Must have at least one member selected
+    if (!hasSelectedMembers()) return false;
+    
+    // Find the last revealed sub-step
+    let lastRevealedIndex = -1;
+    for (let i = 0; i < step.subSteps!.length; i++) {
+      if (isSubStepRevealed(i)) {
+        lastRevealedIndex = i;
+      } else {
+        break;
+      }
+    }
+    
+    // All revealed sub-steps must be completed
+    for (let i = 0; i <= lastRevealedIndex; i++) {
+      if (!isSubStepCompleted(i)) {
+        return false;
+      }
+    }
+    
+    return true;
   };
 
   const getStepProgress = () => {
@@ -123,14 +162,15 @@ const StepCard: React.FC<StepCardProps> = ({
                 
                 return (
                   <div key={subStep.id} className="space-y-4">
+                    <h4 className="text-gray-600 font-medium">{subStep.title}</h4>
                     <SubStepCard
                       subStep={subStep}
                       subStepIndex={subStepIndex}
                       parentStepIndex={stepIndex}
-                      isActive={subStepIndex === currentSubStep}
+                      isActive={true}
                       isCompleted={isSubStepCompleted(subStepIndex)}
                       isRevealed={true}
-                      onSubStepClick={handleSubStepClick}
+                      onSubStepClick={() => {}}
                       onOptionToggle={(optionId) => handleSubStepOptionToggle(subStep.id, optionId)}
                     />
                   </div>
@@ -143,6 +183,28 @@ const StepCard: React.FC<StepCardProps> = ({
           {!hasSubSteps && !hasMembers && (
             <div>{getStepContent(stepIndex)}</div>
           )}
+
+          {/* Navigation Buttons */}
+          <div className="flex justify-between pt-6">
+            {!hideBackButton && (
+              <Button
+                variant="outline"
+                onClick={onBack}
+                disabled={stepIndex === 0}
+              >
+                {backButtonText}
+              </Button>
+            )}
+            {!hideNextButton && (
+              <Button
+                onClick={onNext}
+                disabled={!areAllRequiredSubStepsCompleted()}
+                className="ml-auto"
+              >
+                {nextButtonText}
+              </Button>
+            )}
+          </div>
         </CardContent>
       </Card>
     );

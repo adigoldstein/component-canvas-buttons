@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SubStepData } from './types';
 
@@ -35,54 +34,18 @@ const SubStepCard: React.FC<SubStepCardProps> = ({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-3">
-        <div
-          className={cn(
-            'flex items-center justify-center w-6 h-6 rounded-full text-xs font-medium',
-            {
-              'bg-green-500 text-white': isCompleted,
-              'bg-red-500 text-white': isActive && !isCompleted,
-              'bg-gray-300 text-gray-600': !isActive && !isCompleted,
-            }
-          )}
-        >
-          {isCompleted ? (
-            <Check className="w-3 h-3" />
-          ) : (
-            <span>{subStepIndex + 1}</span>
-          )}
-        </div>
-        <h4 className={cn(
-          'font-medium',
-          {
-            'text-green-700': isCompleted,
-            'text-red-600': isActive && !isCompleted,
-            'text-gray-500': !isActive && !isCompleted,
-          }
-        )}>
-          {subStep.title} *
-        </h4>
-      </div>
-      
       <div className={cn('grid gap-4', gridCols)}>
         {subStep.options.map((option) => (
           <div
             key={option.id}
             className={cn(
-              'flex flex-col items-center p-4 border-2 rounded-lg transition-colors min-h-[100px] justify-center',
+              'flex flex-col items-center p-4 border-2 rounded-lg transition-colors min-h-[100px] justify-center cursor-pointer',
               {
                 'border-red-500 bg-red-50': option.selected,
-                'border-gray-200 hover:border-red-300 bg-white': !option.selected && (isActive || isCompleted),
-                'border-gray-200 bg-gray-50': !option.selected && !isActive && !isCompleted,
-                'cursor-pointer': isActive,
-                'cursor-not-allowed opacity-60': !isActive && !isCompleted,
+                'border-gray-200 hover:border-red-300 bg-white': !option.selected,
               }
             )}
-            onClick={() => {
-              if (isActive) {
-                onOptionToggle(option.id);
-              }
-            }}
+            onClick={() => onOptionToggle(option.id)}
           >
             <div className="flex items-center justify-center w-8 h-8 mb-2">
               {option.icon}

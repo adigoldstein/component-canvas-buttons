@@ -23,45 +23,30 @@ const StepperShowcase: React.FC = () => {
       subSteps: [
         {
           id: 'sub-1-1',
-          title: 'Select Service Group',
+          title: 'Choose Case Type',
           icon: <Heart className="w-4 h-4" />,
           completed: false,
           selectionType: 'single',
           maxCardsPerRow: 3,
           autoProgress: true,
           options: [
-            { id: 'group1', name: 'Group 1', icon: <Heart className="w-4 h-4" />, selected: false },
-            { id: 'group2', name: 'Group 2', icon: <Shield className="w-4 h-4" />, selected: false },
-            { id: 'group3', name: 'Group 3', icon: <Plus className="w-4 h-4" />, selected: false },
+            { id: 'group1', name: 'Medical', icon: <Heart className="w-4 h-4" />, selected: false },
+            { id: 'group2', name: 'Dental', icon: <Shield className="w-4 h-4" />, selected: false },
+            { id: 'group3', name: 'Vision', icon: <Plus className="w-4 h-4" />, selected: false },
           ]
         },
         {
           id: 'sub-1-2',
-          title: 'Select Service Type',
+          title: 'Provide Case Details',
           icon: <FileText className="w-4 h-4" />,
           completed: false,
           selectionType: 'single',
           maxCardsPerRow: 3,
           autoProgress: true,
           options: [
-            { id: 'type1', name: 'Type 1', icon: <Plus className="w-4 h-4" />, selected: false },
-            { id: 'type2', name: 'Type 2', icon: <Plus className="w-4 h-4" />, selected: false },
-            { id: 'type3', name: 'Type 3', icon: <Plus className="w-4 h-4" />, selected: false },
-          ]
-        },
-        {
-          id: 'sub-1-3',
-          title: 'Select Specialty',
-          icon: <Stethoscope className="w-4 h-4" />,
-          completed: false,
-          selectionType: 'single',
-          maxCardsPerRow: 3,
-          autoProgress: false,
-          options: [
-            { id: 'specialty1', name: 'Specialty 1', icon: <Plus className="w-4 h-4" />, selected: false },
-            { id: 'specialty2', name: 'Specialty 2', icon: <Plus className="w-4 h-4" />, selected: false },
-            { id: 'specialty3', name: 'Specialty 3', icon: <Plus className="w-4 h-4" />, selected: false },
-            { id: 'specialty4', name: 'Specialty 4', icon: <Plus className="w-4 h-4" />, selected: false },
+            { id: 'detail1', name: 'Emergency', icon: <Plus className="w-4 h-4" />, selected: false },
+            { id: 'detail2', name: 'Routine', icon: <Plus className="w-4 h-4" />, selected: false },
+            { id: 'detail3', name: 'Preventive', icon: <Plus className="w-4 h-4" />, selected: false },
           ]
         },
       ],
@@ -162,13 +147,29 @@ const StepperShowcase: React.FC = () => {
   const handleMemberToggle = (stepId: string, memberId: string) => {
     const updatedSteps = stepData.map(step => {
       if (step.id === stepId && step.members) {
+        const updatedMembers = step.members.map(member => 
+          member.id === memberId 
+            ? { ...member, selected: !member.selected }
+            : member
+        );
+        
+        // Check if no members are selected after this toggle
+        const hasSelectedMembers = updatedMembers.some(member => member.selected);
+        
+        // If no members selected, reset all sub-steps
+        let updatedSubSteps = step.subSteps;
+        if (!hasSelectedMembers && step.subSteps) {
+          updatedSubSteps = step.subSteps.map(subStep => ({
+            ...subStep,
+            completed: false,
+            options: subStep.options.map(option => ({ ...option, selected: false }))
+          }));
+        }
+        
         return {
           ...step,
-          members: step.members.map(member => 
-            member.id === memberId 
-              ? { ...member, selected: !member.selected }
-              : member
-          ),
+          members: updatedMembers,
+          subSteps: updatedSubSteps,
         };
       }
       return step;
@@ -181,24 +182,49 @@ const StepperShowcase: React.FC = () => {
       if (step.id === stepId && step.subSteps) {
         return {
           ...step,
-          subSteps: step.subSteps.map(subStep => {
+          subSteps: step.subSteps.map((subStep, subStepIndex) => {
             if (subStep.id === subStepId) {
+              const updatedOptions = subStep.options.map(option => {
+                if (subStep.selectionType === 'single') {
+                  // Single selection: deselect all others
+                  return {
+                    ...option,
+                    selected: option.id === optionId ? !option.selected : false
+                  };
+                } else {
+                  // Multiple selection: toggle only the clicked option
+                  return option.id === optionId 
+                    ? { ...option, selected: !option.selected }
+                    : option;
+                }
+              });
+              
+              // Check if this sub-step is now completed
+              const hasSelection = updatedOptions.some(option => option.selected);
+              
+              // If this sub-step selection is cleared, reset all subsequent sub-steps
+              const isCurrentlyCompleted = subStep.completed;
+              const willBeCompleted = hasSelection;
+              
+              let updatedSubSteps = step.subSteps;
+              if (isCurrentlyCompleted && !willBeCompleted) {
+                // Clear all subsequent sub-steps
+                updatedSubSteps = step.subSteps.map((s, idx) => {
+                  if (idx > subStepIndex) {
+                    return {
+                      ...s,
+                      completed: false,
+                      options: s.options.map(opt => ({ ...opt, selected: false }))
+                    };
+                  }
+                  return s;
+                });
+              }
+              
               return {
                 ...subStep,
-                options: subStep.options.map(option => {
-                  if (subStep.selectionType === 'single') {
-                    // Single selection: deselect all others
-                    return {
-                      ...option,
-                      selected: option.id === optionId ? !option.selected : false
-                    };
-                  } else {
-                    // Multiple selection: toggle only the clicked option
-                    return option.id === optionId 
-                      ? { ...option, selected: !option.selected }
-                      : option;
-                  }
-                })
+                options: updatedOptions,
+                completed: hasSelection,
               };
             }
             return subStep;
