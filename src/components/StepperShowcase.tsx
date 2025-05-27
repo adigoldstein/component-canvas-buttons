@@ -69,27 +69,23 @@ const StepperShowcase: React.FC = () => {
     },
   ]);
 
-  // Auto-progression logic
+  // Auto-progression logic - only mark sub-steps as completed, don't advance steps
   useEffect(() => {
     const currentStepData = stepData[currentStep];
     if (currentStepData.subSteps && currentSubStep < currentStepData.subSteps.length) {
       const currentSubStepData = currentStepData.subSteps[currentSubStep];
       
       // Check if current sub-step should auto-progress
-      if (currentSubStepData.autoProgress) {
+      if (currentSubStepData.autoProgress && !currentSubStepData.completed) {
         const hasSelection = currentSubStepData.options.some(option => option.selected);
         
-        if (hasSelection && !currentSubStepData.completed) {
-          // Mark current sub-step as completed and move to next
+        if (hasSelection) {
+          // Mark current sub-step as completed
           setTimeout(() => {
             const updatedSteps = [...stepData];
             updatedSteps[currentStep].subSteps![currentSubStep].completed = true;
             setStepData(updatedSteps);
-            
-            if (currentSubStep < currentStepData.subSteps!.length - 1) {
-              setCurrentSubStep(currentSubStep + 1);
-            }
-          }, 500);
+          }, 300);
         }
       }
     }
@@ -100,26 +96,9 @@ const StepperShowcase: React.FC = () => {
   };
 
   const handleNext = () => {
-    const currentStepData = stepData[currentStep];
-    
-    if (currentStepData.subSteps && currentSubStep < currentStepData.subSteps.length - 1) {
-      // Move to next sub-step
-      setCurrentSubStep(currentSubStep + 1);
-      
-      // Mark current sub-step as completed
+    if (currentStep < stepData.length - 1) {
+      // Mark current main step as completed and move to next step
       const updatedSteps = [...stepData];
-      updatedSteps[currentStep].subSteps![currentSubStep].completed = true;
-      setStepData(updatedSteps);
-    } else if (currentStep < stepData.length - 1) {
-      // Move to next main step
-      const updatedSteps = [...stepData];
-      
-      // Complete current sub-step if exists
-      if (currentStepData.subSteps) {
-        updatedSteps[currentStep].subSteps![currentSubStep].completed = true;
-      }
-      
-      // Mark main step as completed
       updatedSteps[currentStep].completed = true;
       setStepData(updatedSteps);
       
@@ -129,9 +108,7 @@ const StepperShowcase: React.FC = () => {
   };
 
   const handleBackStepper = () => {
-    if (currentSubStep > 0) {
-      setCurrentSubStep(currentSubStep - 1);
-    } else if (currentStep > 0) {
+    if (currentStep > 0) {
       const prevStep = currentStep - 1;
       const prevStepData = stepData[prevStep];
       setCurrentStep(prevStep);
@@ -164,6 +141,8 @@ const StepperShowcase: React.FC = () => {
             completed: false,
             options: subStep.options.map(option => ({ ...option, selected: false }))
           }));
+          // Reset to first sub-step when members are deselected
+          setCurrentSubStep(0);
         }
         
         return {
@@ -199,13 +178,12 @@ const StepperShowcase: React.FC = () => {
                 }
               });
               
-              // Check if this sub-step is now completed
+              // Check if this sub-step selection is cleared
               const hasSelection = updatedOptions.some(option => option.selected);
-              
-              // If this sub-step selection is cleared, reset all subsequent sub-steps
               const isCurrentlyCompleted = subStep.completed;
               const willBeCompleted = hasSelection;
               
+              // If this sub-step selection is cleared, reset all subsequent sub-steps
               let updatedSubSteps = step.subSteps;
               if (isCurrentlyCompleted && !willBeCompleted) {
                 // Clear all subsequent sub-steps
