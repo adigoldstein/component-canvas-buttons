@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Clock, Users, TrendingUp, CheckCircle, ShoppingCart, BarChart3 } from 'lucide-react';
+import { ArrowRight, Clock, Users, TrendingUp, CheckCircle, ShoppingCart, BarChart3, Check } from 'lucide-react';
 import { InfoCard } from './lib/InfoCard';
 import { MemberChip } from './lib/MemberChip';
 import { Button } from './lib/button-library';
@@ -28,6 +28,55 @@ const InfoCardShowcase: React.FC = () => {
         <h1 className="text-3xl font-bold text-center mb-8 text-gray-900">
           InfoCard Component Library
         </h1>
+
+        {/* Featured Policy Card - Full Width */}
+        <section className="mb-12">
+          <h2 className="text-2xl font-semibold mb-6 text-gray-800">Featured: Your Active Policy</h2>
+          <InfoCard 
+            title="Your Active Policy"
+            icon={<Check className="w-5 h-5 text-green-500" />}
+            footer={
+              <div className="flex justify-end">
+                <button 
+                  onClick={handleClick}
+                  className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center gap-1 transition-colors"
+                >
+                  View All Policy
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            }
+            className="w-full"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Left Section - Dates and Status */}
+              <div className="space-y-2">
+                <p className="text-sm text-gray-600">Jan 1, 2024 - Dec 31, 2024</p>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span className="text-sm font-medium text-green-600">Status: Active</span>
+                </div>
+              </div>
+
+              {/* Middle Section - Policy Details */}
+              <div className="space-y-2">
+                <h4 className="font-semibold text-gray-900 text-lg">Family Health Insurance</h4>
+                <p className="text-sm text-gray-600">Policy: POL-2024-001234</p>
+              </div>
+
+              {/* Right Section - Covered Members */}
+              <div className="space-y-3">
+                <p className="text-sm font-medium text-gray-700">Covered Members:</p>
+                <div className="flex gap-2 flex-wrap">
+                  <MemberChip label="HOF" size="md" />
+                  <MemberChip label="SP" size="md" />
+                  <MemberChip label="C1" size="md" />
+                  <MemberChip label="C2" size="md" />
+                </div>
+              </div>
+            </div>
+          </InfoCard>
+        </section>
 
         {/* Basic Usage */}
         <section className="mb-12">
@@ -89,14 +138,14 @@ const InfoCardShowcase: React.FC = () => {
               </Button>
             </InfoCard>
 
-            {/* Active Policy Card */}
+            {/* Original Active Policy Card - Compact Version */}
             <InfoCard 
-              title="Your Active Policy"
+              title="Compact Policy View"
               footer={
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-500">Jan 1, 2024 - Dec 31, 2024</span>
                   <Button variant="ghost" size="sm" onClick={handleClick}>
-                    View All Policy
+                    View Details
                     <ArrowRight className="w-4 h-4 ml-1" />
                   </Button>
                 </div>
@@ -248,24 +297,23 @@ const InfoCardShowcase: React.FC = () => {
   </div>
 </InfoCard>
 
-// Complex content example
+// Full-width policy card with 3-column layout
 <InfoCard 
-  title="Policy Details"
+  title="Your Active Policy"
+  icon={<Check className="w-5 h-5 text-green-500" />}
   footer={
-    <Button variant="outline">
-      View Full Policy
-    </Button>
+    <div className="flex justify-end">
+      <button className="text-blue-600">
+        View All Policy <ArrowRight />
+      </button>
+    </div>
   }
+  className="w-full"
 >
-  <div className="space-y-4">
-    <div>
-      <h4>Family Health Insurance</h4>
-      <p>Policy: POL-2024-001234</p>
-    </div>
-    <div className="flex gap-2">
-      <MemberChip label="HOF" />
-      <MemberChip label="SP" />
-    </div>
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div>Date and Status</div>
+    <div>Policy Details</div>
+    <div>Covered Members</div>
   </div>
 </InfoCard>`}</pre>
           </div>
