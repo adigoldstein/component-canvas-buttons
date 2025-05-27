@@ -45,4 +45,5 @@ const CheckboxDisclaimer: React.FC<CheckboxDisclaimerProps> = ({
   );
 };
 
+export { CheckboxDisclaimer };
 export default CheckboxDisclaimer;
