@@ -2,23 +2,114 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import UploadFile from '@/components/lib/UploadFile';
+import UploadedFileList, { UploadedFile, FileStatus } from '@/components/lib/UploadedFileList';
 import { toast } from 'sonner';
 
 const UploadFileShowcase: React.FC = () => {
-  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
 
-  const handleFileUpload = (files: File[]) => {
-    setUploadedFiles(prev => [...prev, ...files]);
-    toast.success(`${files.length} file(s) uploaded successfully!`);
-    console.log('Uploaded files:', files);
+  // Simulate upload process with different outcomes
+  const simulateUpload = (file: File): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      // Simulate different upload scenarios
+      const random = Math.random();
+      const delay = 1000 + Math.random() * 2000; // 1-3 seconds
+      
+      setTimeout(() => {
+        if (random > 0.8) {
+          reject(new Error('Upload failed'));
+        } else {
+          resolve();
+        }
+      }, delay);
+    });
   };
 
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  const handleFileUpload = async (files: File[]) => {
+    const newFiles: UploadedFile[] = files.map(file => ({
+      id: `${Date.now()}-${Math.random()}`,
+      name: file.name,
+      size: file.size,
+      type: file.type,
+      status: 'loading' as FileStatus
+    }));
+
+    setUploadedFiles(prev => [...prev, ...newFiles]);
+    toast.success(`Starting upload of ${files.length} file(s)...`);
+
+    // Process each file
+    for (const newFile of newFiles) {
+      const originalFile = files.find(f => f.name === newFile.name);
+      if (!originalFile) continue;
+
+      try {
+        await simulateUpload(originalFile);
+        
+        setUploadedFiles(prev => 
+          prev.map(f => 
+            f.id === newFile.id 
+              ? { ...f, status: 'success' as FileStatus }
+              : f
+          )
+        );
+        toast.success(`${newFile.name} uploaded successfully!`);
+      } catch (error) {
+        setUploadedFiles(prev => 
+          prev.map(f => 
+            f.id === newFile.id 
+              ? { ...f, status: 'error' as FileStatus }
+              : f
+          )
+        );
+        toast.error(`Failed to upload ${newFile.name}`);
+      }
+    }
+  };
+
+  const handleRemoveFile = (id: string) => {
+    setUploadedFiles(prev => prev.filter(f => f.id !== id));
+    toast.info('File removed');
+  };
+
+  const handleRetryFile = async (id: string) => {
+    const file = uploadedFiles.find(f => f.id === id);
+    if (!file) return;
+
+    // Reset to loading state
+    setUploadedFiles(prev => 
+      prev.map(f => 
+        f.id === id 
+          ? { ...f, status: 'loading' as FileStatus }
+          : f
+      )
+    );
+
+    toast.info(`Retrying upload of ${file.name}...`);
+
+    // Create a fake File object for retry simulation
+    const fakeFile = new File([''], file.name, { type: file.type });
+
+    try {
+      await simulateUpload(fakeFile);
+      
+      setUploadedFiles(prev => 
+        prev.map(f => 
+          f.id === id 
+            ? { ...f, status: 'success' as FileStatus }
+            : f
+        )
+      );
+      toast.success(`${file.name} uploaded successfully!`);
+    } catch (error) {
+      setUploadedFiles(prev => 
+        prev.map(f => 
+          f.id === id 
+            ? { ...f, status: 'error' as FileStatus }
+            : f
+        )
+      );
+      toast.error(`Failed to upload ${file.name}`);
+    }
   };
 
   return (
@@ -29,22 +120,46 @@ const UploadFileShowcase: React.FC = () => {
             Upload File Component
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            A drag-and-drop file upload component with support for multiple file types and size validation.
+            A complete file upload system with drag-and-drop, status tracking, and file management.
           </p>
         </div>
 
         <div className="grid gap-8">
+          {/* Complete Upload System */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Complete File Upload System</CardTitle>
+              <CardDescription>
+                Upload files with real-time status feedback, retry failed uploads, and manage your file list.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <UploadFile onChange={handleFileUpload} />
+              
+              {uploadedFiles.length > 0 && (
+                <UploadedFileList
+                  files={uploadedFiles}
+                  onRemove={handleRemoveFile}
+                  onRetry={handleRetryFile}
+                />
+              )}
+            </CardContent>
+          </Card>
+
           {/* Basic Upload Example */}
           <Card>
             <CardHeader>
               <CardTitle>Basic File Upload</CardTitle>
               <CardDescription>
-                Drag and drop files or click to select. Supports JPG, PNG, and PDF files up to 5MB each.
+                Simple drag and drop without status tracking.
               </CardDescription>
             </CardHeader>
             <CardContent>
               <UploadFile
-                onChange={handleFileUpload}
+                onChange={(files) => {
+                  toast.success(`Selected ${files.length} file(s)`);
+                  console.log('Files selected:', files);
+                }}
               />
             </CardContent>
           </Card>
@@ -60,8 +175,7 @@ const UploadFileShowcase: React.FC = () => {
             <CardContent>
               <UploadFile
                 onChange={(files) => {
-                  toast.success(`Image uploaded: ${files[0]?.name}`);
-                  console.log('Single image uploaded:', files[0]);
+                  toast.success(`Image selected: ${files[0]?.name}`);
                 }}
                 accept={['.jpg', '.png']}
                 maxSizeMB={2}
@@ -70,55 +184,18 @@ const UploadFileShowcase: React.FC = () => {
             </CardContent>
           </Card>
 
-          {/* Uploaded Files Display */}
-          {uploadedFiles.length > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Uploaded Files ({uploadedFiles.length})</CardTitle>
-                <CardDescription>
-                  Files that have been successfully uploaded to the basic upload component.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {uploadedFiles.map((file, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-blue-100 rounded flex items-center justify-center">
-                          <span className="text-blue-600 text-xs font-medium">
-                            {file.name.split('.').pop()?.toUpperCase()}
-                          </span>
-                        </div>
-                        <div>
-                          <p className="font-medium text-gray-900">{file.name}</p>
-                          <p className="text-sm text-gray-500">{formatFileSize(file.size)}</p>
-                        </div>
-                      </div>
-                      <button
-                        onClick={() => setUploadedFiles(prev => prev.filter((_, i) => i !== index))}
-                        className="text-red-600 hover:text-red-800 text-sm font-medium"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
           {/* Component API Documentation */}
           <Card>
             <CardHeader>
               <CardTitle>Component API</CardTitle>
               <CardDescription>
-                Props and configuration options for the UploadFile component.
+                Props and configuration options for both components.
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-2">Props</h4>
+                  <h4 className="font-medium text-gray-900 mb-2">UploadFile Props</h4>
                   <div className="bg-gray-50 rounded-lg p-4 font-mono text-sm">
                     <div className="space-y-2">
                       <div><span className="text-blue-600">onChange</span>: (files: File[]) =&gt; void</div>
@@ -129,16 +206,28 @@ const UploadFileShowcase: React.FC = () => {
                     </div>
                   </div>
                 </div>
+
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-2">UploadedFileList Props</h4>
+                  <div className="bg-gray-50 rounded-lg p-4 font-mono text-sm">
+                    <div className="space-y-2">
+                      <div><span className="text-blue-600">files</span>: UploadedFile[]</div>
+                      <div><span className="text-blue-600">onRemove</span>: (id: string) =&gt; void</div>
+                      <div><span className="text-blue-600">onRetry?</span>: (id: string) =&gt; void</div>
+                    </div>
+                  </div>
+                </div>
                 
                 <div>
                   <h4 className="font-medium text-gray-900 mb-2">Features</h4>
                   <ul className="list-disc list-inside space-y-1 text-gray-600">
                     <li>Drag and drop file upload</li>
                     <li>Manual file selection via button</li>
-                    <li>File type validation</li>
-                    <li>File size validation</li>
-                    <li>Multiple file support</li>
-                    <li>Visual feedback for drag states</li>
+                    <li>File type and size validation</li>
+                    <li>Real-time upload status feedback</li>
+                    <li>Retry failed uploads</li>
+                    <li>Remove files from list</li>
+                    <li>Visual status indicators (loading, success, error)</li>
                     <li>Accessible and keyboard-friendly</li>
                   </ul>
                 </div>
