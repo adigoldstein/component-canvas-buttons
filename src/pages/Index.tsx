@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
@@ -52,6 +51,12 @@ export default function Index() {
       description: 'Color-coded status chips that automatically style based on status keywords like active, submitted, canceled.',
       route: '/status-chip',
       color: 'bg-emerald-500 hover:bg-emerald-600'
+    },
+    {
+      title: 'Upload File',
+      description: 'Drag-and-drop file upload component with support for multiple file types, size validation, and visual feedback.',
+      route: '/upload-file',
+      color: 'bg-amber-500 hover:bg-amber-600'
     }
   ];
 
